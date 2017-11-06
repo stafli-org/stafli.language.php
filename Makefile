@@ -147,79 +147,28 @@ purge:
         ifeq ($(DISTRO), all)
 		@echo Purging containers, networks, volumes and images for debian8...
 		bash -c "(cd debian8; set -o allexport; source .env; set +o allexport; docker-compose down)";
-		docker volume rm debian8_memcached14_data;
-		docker volume rm debian8_redis32_data;
-		docker volume rm debian8_mariadb10_data;
 		docker volume rm debian8_web_data;
-		docker rmi solict/high-performance-php-stack:debian8_memcached14;
-		docker rmi solict/high-performance-php-stack:debian8_redis32;
-		docker rmi solict/high-performance-php-stack:debian8_mariadb10;
 		docker rmi solict/high-performance-php-stack:debian8_php56;
-		docker rmi solict/high-performance-php-stack:debian8_httpd24_web;
-		docker rmi solict/high-performance-php-stack:debian8_httpd24_proxy;
 		@echo
 		@echo Purging containers, networks, volumes and images for debian7...
 		bash -c "(cd debian7; set -o allexport; source .env; set +o allexport; docker-compose down)";
-		docker volume rm debian7_memcached14_data;
-		docker volume rm debian7_redis32_data;
-		docker volume rm debian7_mariadb10_data;
 		docker volume rm debian7_web_data;
-		docker rmi solict/high-performance-php-stack:debian7_memcached14;
-		docker rmi solict/high-performance-php-stack:debian7_redis32;
-		docker rmi solict/high-performance-php-stack:debian7_mariadb10;
 		docker rmi solict/high-performance-php-stack:debian7_php56;
-		docker rmi solict/high-performance-php-stack:debian7_httpd22_web;
-		docker rmi solict/high-performance-php-stack:debian7_httpd22_proxy;
 		@echo
 		@echo Purging containers, networks, volumes and images for centos7...
 		bash -c "(cd centos7; set -o allexport; source .env; set +o allexport; docker-compose down)";
-		docker volume rm centos7_memcached14_data;
-		docker volume rm centos7_redis32_data;
-		docker volume rm centos7_mariadb10_data;
 		docker volume rm centos7_web_data;
-		docker rmi solict/high-performance-php-stack:centos7_memcached14;
-		docker rmi solict/high-performance-php-stack:centos7_redis32;
-		docker rmi solict/high-performance-php-stack:centos7_mariadb10;
 		docker rmi solict/high-performance-php-stack:centos7_php56;
-		docker rmi solict/high-performance-php-stack:centos7_httpd24_web;
-		docker rmi solict/high-performance-php-stack:centos7_httpd24_proxy;
 		@echo
 		@echo Purging containers, networks, volumes and images for centos6...
 		bash -c "(cd centos6; set -o allexport; source .env; set +o allexport; docker-compose down)";
-		docker volume rm centos6_memcached14_data;
-		docker volume rm centos6_redis32_data;
-		docker volume rm centos6_mariadb10_data;
 		docker volume rm centos6_web_data;
-		docker rmi solict/high-performance-php-stack:centos6_memcached14;
-		docker rmi solict/high-performance-php-stack:centos6_redis32;
-		docker rmi solict/high-performance-php-stack:centos6_mariadb10;
 		docker rmi solict/high-performance-php-stack:centos6_php56;
-		docker rmi solict/high-performance-php-stack:centos6_httpd22_web;
-		docker rmi solict/high-performance-php-stack:centos6_httpd22_proxy;
         else
 		@echo Purging containers, networks, volumes and images for $(DISTRO)...
 		bash -c "(cd $(DISTRO); set -o allexport; source .env; set +o allexport; docker-compose down)";
-		docker volume rm $(DISTRO)_memcached14_data;
-		docker volume rm $(DISTRO)_redis32_data;
-		docker volume rm $(DISTRO)_mariadb10_data;
 		docker volume rm $(DISTRO)_web_data;
-		docker rmi solict/high-performance-php-stack:$(DISTRO)_memcached14;
-		docker rmi solict/high-performance-php-stack:$(DISTRO)_redis32;
-		docker rmi solict/high-performance-php-stack:$(DISTRO)_mariadb10;
 		docker rmi solict/high-performance-php-stack:$(DISTRO)_php56;
-                ifeq ($(DISTRO), debian8)
-			docker rmi solict/high-performance-php-stack:$(DISTRO)_httpd24_web;
-			docker rmi solict/high-performance-php-stack:$(DISTRO)_httpd24_proxy;
-                else ifeq ($(DISTRO), debian7)
-			docker rmi solict/high-performance-php-stack:$(DISTRO)_httpd22_web;
-			docker rmi solict/high-performance-php-stack:$(DISTRO)_httpd22_proxy;
-                else ifeq ($(DISTRO), centos7)
-			docker rmi solict/high-performance-php-stack:$(DISTRO)_httpd24_web;
-			docker rmi solict/high-performance-php-stack:$(DISTRO)_httpd24_proxy;
-                else ifeq ($(DISTRO), centos6)
-			docker rmi solict/high-performance-php-stack:$(DISTRO)_httpd22_web;
-			docker rmi solict/high-performance-php-stack:$(DISTRO)_httpd22_proxy;
-                endif
         endif
 
 
@@ -295,55 +244,19 @@ img-rm:
 	@echo
         ifeq ($(DISTRO), all)
 		@echo Removing images for debian8...
-		docker rmi solict/high-performance-php-stack:debian8_memcached14;
-		docker rmi solict/high-performance-php-stack:debian8_redis32;
-		docker rmi solict/high-performance-php-stack:debian8_mariadb10;
 		docker rmi solict/high-performance-php-stack:debian8_php56;
-		docker rmi solict/high-performance-php-stack:debian8_httpd24_web;
-		docker rmi solict/high-performance-php-stack:debian8_httpd24_proxy;
 		@echo
 		@echo Removing images for debian7...
-		docker rmi solict/high-performance-php-stack:debian7_memcached14;
-		docker rmi solict/high-performance-php-stack:debian7_redis32;
-		docker rmi solict/high-performance-php-stack:debian7_mariadb10;
 		docker rmi solict/high-performance-php-stack:debian7_php56;
-		docker rmi solict/high-performance-php-stack:debian7_httpd22_web;
-		docker rmi solict/high-performance-php-stack:debian7_httpd22_proxy;
 		@echo
 		@echo Removing images for centos7...
-		docker rmi solict/high-performance-php-stack:centos7_memcached14;
-		docker rmi solict/high-performance-php-stack:centos7_redis32;
-		docker rmi solict/high-performance-php-stack:centos7_mariadb10;
 		docker rmi solict/high-performance-php-stack:centos7_php56;
-		docker rmi solict/high-performance-php-stack:centos7_httpd24_web;
-		docker rmi solict/high-performance-php-stack:centos7_httpd24_proxy;
 		@echo
 		@echo Removing images for centos6...
-		docker rmi solict/high-performance-php-stack:centos6_memcached14;
-		docker rmi solict/high-performance-php-stack:centos6_redis32;
-		docker rmi solict/high-performance-php-stack:centos6_mariadb10;
 		docker rmi solict/high-performance-php-stack:centos6_php56;
-		docker rmi solict/high-performance-php-stack:centos6_httpd22_web;
-		docker rmi solict/high-performance-php-stack:centos6_httpd22_proxy;
         else
 		@echo Removing images for $(DISTRO)...
-		docker rmi solict/high-performance-php-stack:$(DISTRO)_memcached14;
-		docker rmi solict/high-performance-php-stack:$(DISTRO)_redis32;
-		docker rmi solict/high-performance-php-stack:$(DISTRO)_mariadb10;
 		docker rmi solict/high-performance-php-stack:$(DISTRO)_php56;
-                ifeq ($(DISTRO), debian8)
-			docker rmi solict/high-performance-php-stack:$(DISTRO)_httpd24_web;
-			docker rmi solict/high-performance-php-stack:$(DISTRO)_httpd24_proxy;
-                else ifeq ($(DISTRO), debian7)
-			docker rmi solict/high-performance-php-stack:$(DISTRO)_httpd22_web;
-			docker rmi solict/high-performance-php-stack:$(DISTRO)_httpd22_proxy;
-                else ifeq ($(DISTRO), centos7)
-			docker rmi solict/high-performance-php-stack:$(DISTRO)_httpd24_web;
-			docker rmi solict/high-performance-php-stack:$(DISTRO)_httpd24_proxy;
-                else ifeq ($(DISTRO), centos6)
-			docker rmi solict/high-performance-php-stack:$(DISTRO)_httpd22_web;
-			docker rmi solict/high-performance-php-stack:$(DISTRO)_httpd22_proxy;
-                endif
         endif
 
 
@@ -529,55 +442,19 @@ con-inspect:
 	@echo
         ifeq ($(DISTRO), all)
 		@echo Inspecting containers for debian8...
-		docker inspect debian8_memcached14_1;
-		docker inspect debian8_redis32_1;
-		docker inspect debian8_mariadb10_1;
 		docker inspect debian8_php56_1;
-		docker inspect debian8_httpd24_web_1;
-		docker inspect debian8_httpd24_proxy_1;
 		@echo
 		@echo Inspecting containers for debian7...
-		docker inspect debian7_memcached14_1;
-		docker inspect debian7_redis32_1;
-		docker inspect debian7_mariadb10_1;
 		docker inspect debian7_php56_1;
-		docker inspect debian7_httpd22_web_1;
-		docker inspect debian7_httpd22_proxy_1;
 		@echo
 		@echo Inspecting containers for centos7...
-		docker inspect centos7_memcached14_1;
-		docker inspect centos7_redis32_1;
-		docker inspect centos7_mariadb10_1;
 		docker inspect centos7_php56_1;
-		docker inspect centos7_httpd24_web_1;
-		docker inspect centos7_httpd24_proxy_1;
 		@echo
 		@echo Inspecting containers for centos6...
-		docker inspect centos6_memcached14_1;
-		docker inspect centos6_redis32_1;
-		docker inspect centos6_mariadb10_1;
 		docker inspect centos6_php56_1;
-		docker inspect centos6_httpd22_web_1;
-		docker inspect centos6_httpd22_proxy_1;
         else
 		@echo Inspecting containers for $(DISTRO)...
-		docker inspect $(DISTRO)_memcached14_1;
-		docker inspect $(DISTRO)_redis32_1;
-		docker inspect $(DISTRO)_mariadb10_1;
 		docker inspect $(DISTRO)_php56_1;
-                ifeq ($(DISTRO), debian8)
-			docker inspect $(DISTRO)_httpd24_web_1;
-			docker inspect $(DISTRO)_httpd24_proxy_1;
-                else ifeq ($(DISTRO), debian7)
-			docker inspect $(DISTRO)_httpd22_web_1;
-			docker inspect $(DISTRO)_httpd22_proxy_1;
-                else ifeq ($(DISTRO), centos7)
-			docker inspect $(DISTRO)_httpd24_web_1;
-			docker inspect $(DISTRO)_httpd24_proxy_1;
-                else ifeq ($(DISTRO), centos6)
-			docker inspect $(DISTRO)_httpd22_web_1;
-			docker inspect $(DISTRO)_httpd22_proxy_1;
-                endif
         endif
 
 con-ips:
@@ -586,55 +463,19 @@ con-ips:
 	@echo
         ifeq ($(DISTRO), all)
 		@echo Showing IP addresses of containers for debian8...
-		docker inspect debian8_memcached14_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
-		docker inspect debian8_redis32_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
-		docker inspect debian8_mariadb10_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
 		docker inspect debian8_php56_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
-		docker inspect debian8_httpd24_web_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
-		docker inspect debian8_httpd24_proxy_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
 		@echo
 		@echo Showing IP addresses of containers for debian7...
-		docker inspect debian7_memcached14_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
-		docker inspect debian7_redis32_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
-		docker inspect debian7_mariadb10_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
 		docker inspect debian7_php56_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
-		docker inspect debian7_httpd22_web_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
-		docker inspect debian7_httpd22_proxy_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
 		@echo
 		@echo Showing IP addresses of containers for centos7...
-		docker inspect centos7_memcached14_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
-		docker inspect centos7_redis32_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
-		docker inspect centos7_mariadb10_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
 		docker inspect centos7_php56_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
-		docker inspect centos7_httpd24_web_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
-		docker inspect centos7_httpd24_proxy_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
 		@echo
 		@echo Showing IP addresses of containers for centos6...
-		docker inspect centos6_memcached14_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
-		docker inspect centos6_redis32_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
-		docker inspect centos6_mariadb10_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
 		docker inspect centos6_php56_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
-		docker inspect centos6_httpd22_web_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
-		docker inspect centos6_httpd22_proxy_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
         else
 		@echo Showing IP addresses of containers for $(DISTRO)...
-		docker inspect $(DISTRO)_memcached14_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
-		docker inspect $(DISTRO)_redis32_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
-		docker inspect $(DISTRO)_mariadb10_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
 		docker inspect $(DISTRO)_php56_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
-                ifeq ($(DISTRO), debian8)
-			docker inspect $(DISTRO)_httpd24_web_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
-			docker inspect $(DISTRO)_httpd24_proxy_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
-                else ifeq ($(DISTRO), debian7)
-			docker inspect $(DISTRO)_httpd22_web_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
-			docker inspect $(DISTRO)_httpd22_proxy_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
-                else ifeq ($(DISTRO), centos7)
-			docker inspect $(DISTRO)_httpd24_web_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
-			docker inspect $(DISTRO)_httpd24_proxy_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
-                else ifeq ($(DISTRO), centos6)
-			docker inspect $(DISTRO)_httpd22_web_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
-			docker inspect $(DISTRO)_httpd22_proxy_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
-                endif
         endif
 
 
@@ -644,55 +485,19 @@ con-ports:
 	@echo
         ifeq ($(DISTRO), all)
 		@echo Showing ports of containers for debian8...
-		docker port debian8_memcached14_1;
-		docker port debian8_redis32_1;
-		docker port debian8_mariadb10_1;
 		docker port debian8_php56_1;
-		docker port debian8_httpd24_web_1;
-		docker port debian8_httpd24_proxy_1;
 		@echo
 		@echo Showing ports of containers for debian7...
-		docker port debian7_memcached14_1;
-		docker port debian7_redis32_1;
-		docker port debian7_mariadb10_1;
 		docker port debian7_php56_1;
-		docker port debian7_httpd22_web_1;
-		docker port debian7_httpd22_proxy_1;
 		@echo
 		@echo Showing ports of containers for centos7...
-		docker port centos7_memcached14_1;
-		docker port centos7_redis32_1;
-		docker port centos7_mariadb10_1;
 		docker port centos7_php56_1;
-		docker port centos7_httpd24_web_1;
-		docker port centos7_httpd24_proxy_1;
 		@echo
 		@echo Showing ports of containers for centos6...
-		docker port centos6_memcached14_1;
-		docker port centos6_redis32_1;
-		docker port centos6_mariadb10_1;
 		docker port centos6_php56_1;
-		docker port centos6_httpd22_web_1;
-		docker port centos6_httpd22_proxy_1;
         else
 		@echo Showing ports of containers for $(DISTRO)...
-		docker port $(DISTRO)_memcached14_1;
-		docker port $(DISTRO)_redis32_1;
-		docker port $(DISTRO)_mariadb10_1;
 		docker port $(DISTRO)_php56_1;
-                ifeq ($(DISTRO), debian8)
-			docker port $(DISTRO)_httpd24_web_1;
-			docker port $(DISTRO)_httpd24_proxy_1;
-                else ifeq ($(DISTRO), debian7)
-			docker port $(DISTRO)_httpd22_web_1;
-			docker port $(DISTRO)_httpd22_proxy_1;
-                else ifeq ($(DISTRO), centos7)
-			docker port $(DISTRO)_httpd24_web_1;
-			docker port $(DISTRO)_httpd24_proxy_1;
-                else ifeq ($(DISTRO), centos6)
-			docker port $(DISTRO)_httpd22_web_1;
-			docker port $(DISTRO)_httpd22_proxy_1;
-                endif
         endif
 
 
@@ -702,55 +507,19 @@ con-top:
 	@echo
         ifeq ($(DISTRO), all)
 		@echo Showing processes of containers for debian8...
-		docker top debian8_memcached14_1;
-		docker top debian8_redis32_1;
-		docker top debian8_mariadb10_1;
 		docker top debian8_php56_1;
-		docker top debian8_httpd24_web_1;
-		docker top debian8_httpd24_proxy_1;
 		@echo
 		@echo Showing processes of containers for debian7...
-		docker top debian7_memcached14_1;
-		docker top debian7_redis32_1;
-		docker top debian7_mariadb10_1;
 		docker top debian7_php56_1;
-		docker top debian7_httpd22_web_1;
-		docker top debian7_httpd22_proxy_1;
 		@echo
 		@echo Showing processes of containers for centos7...
-		docker top centos7_memcached14_1;
-		docker top centos7_redis32_1;
-		docker top centos7_mariadb10_1;
 		docker top centos7_php56_1;
-		docker top centos7_httpd24_web_1;
-		docker top centos7_httpd24_proxy_1;
 		@echo
 		@echo Showing processes of containers for centos6...
-		docker top centos6_memcached14_1;
-		docker top centos6_redis32_1;
-		docker top centos6_mariadb10_1;
 		docker top centos6_php56_1;
-		docker top centos6_httpd22_web_1;
-		docker top centos6_httpd22_proxy_1;
         else
 		@echo Showing processes of containers for $(DISTRO)...
-		docker top $(DISTRO)_memcached14_1;
-		docker top $(DISTRO)_redis32_1;
-		docker top $(DISTRO)_mariadb10_1;
 		docker top $(DISTRO)_php56_1;
-                ifeq ($(DISTRO), debian8)
-			docker top $(DISTRO)_httpd24_web_1;
-			docker top $(DISTRO)_httpd24_proxy_1;
-                else ifeq ($(DISTRO), debian7)
-			docker top $(DISTRO)_httpd22_web_1;
-			docker top $(DISTRO)_httpd22_proxy_1;
-                else ifeq ($(DISTRO), centos7)
-			docker top $(DISTRO)_httpd24_web_1;
-			docker top $(DISTRO)_httpd24_proxy_1;
-                else ifeq ($(DISTRO), centos6)
-			docker top $(DISTRO)_httpd22_web_1;
-			docker top $(DISTRO)_httpd22_proxy_1;
-                endif
         endif
 
 
@@ -826,32 +595,22 @@ net-create:
 	@echo
         ifeq ($(DISTRO), all)
 		@echo Creating networks for debian8...
-		docker network create debian8_proxy;
-		docker network create debian8_frontend;
 		docker network create debian8_application;
 		docker network create debian8_backend;
 		@echo
 		@echo Creating networks for debian7...
-		docker network create debian7_proxy;
-		docker network create debian7_frontend;
 		docker network create debian7_application;
 		docker network create debian7_backend;
 		@echo
 		@echo Creating networks for centos7...
-		docker network create centos7_proxy;
-		docker network create centos7_frontend;
 		docker network create centos7_application;
 		docker network create centos7_backend;
 		@echo
 		@echo Creating networks for centos6...
-		docker network create centos6_proxy;
-		docker network create centos6_frontend;
 		docker network create centos6_application;
 		docker network create centos6_backend;
         else
 		@echo Creating networks for $(DISTRO)...
-		docker network create $(DISTRO)_proxy;
-		docker network create $(DISTRO)_frontend;
 		docker network create $(DISTRO)_application;
 		docker network create $(DISTRO)_backend;
         endif
@@ -863,32 +622,22 @@ net-rm:
 	@echo
         ifeq ($(DISTRO), all)
 		@echo Removing networks for debian8...
-		docker network rm debian8_proxy;
-		docker network rm debian8_frontend;
 		docker network rm debian8_application;
 		docker network rm debian8_backend;
 		@echo
 		@echo Removing networks for debian7...
-		docker network rm debian7_proxy;
-		docker network rm debian7_frontend;
 		docker network rm debian7_application;
 		docker network rm debian7_backend;
 		@echo
 		@echo Removing networks for centos7...
-		docker network rm centos7_proxy;
-		docker network rm centos7_frontend;
 		docker network rm centos7_application;
 		docker network rm centos7_backend;
 		@echo
 		@echo Removing networks for centos6...
-		docker network rm centos6_proxy;
-		docker network rm centos6_frontend;
 		docker network rm centos6_application;
 		docker network rm centos6_backend;
         else
 		@echo Removing networks for $(DISTRO)...
-		docker network rm $(DISTRO)_proxy;
-		docker network rm $(DISTRO)_frontend;
 		docker network rm $(DISTRO)_application;
 		docker network rm $(DISTRO)_backend;
         endif
@@ -900,32 +649,22 @@ net-inspect:
 	@echo
         ifeq ($(DISTRO), all)
 		@echo Inspecting networks for debian8...
-		docker network inspect debian8_proxy;
-		docker network inspect debian8_frontend;
 		docker network inspect debian8_application;
 		docker network inspect debian8_backend;
 		@echo
 		@echo Inspecting networks for debian7...
-		docker network inspect debian7_proxy;
-		docker network inspect debian7_frontend;
 		docker network inspect debian7_application;
 		docker network inspect debian7_backend;
 		@echo
 		@echo Inspecting networks for centos7...
-		docker network inspect centos7_proxy;
-		docker network inspect centos7_frontend;
 		docker network inspect centos7_application;
 		docker network inspect centos7_backend;
 		@echo
 		@echo Inspecting networks for centos6...
-		docker network inspect centos6_proxy;
-		docker network inspect centos6_frontend;
 		docker network inspect centos6_application;
 		docker network inspect centos6_backend;
         else
 		@echo Inspecting networks for $(DISTRO)...
-		docker network inspect $(DISTRO)_proxy;
-		docker network inspect $(DISTRO)_frontend;
 		docker network inspect $(DISTRO)_application;
 		docker network inspect $(DISTRO)_backend;
         endif
@@ -959,33 +698,18 @@ vol-create:
 	@echo
         ifeq ($(DISTRO), all)
 		@echo Creating volumes for debian8...
-		docker volume create --driver local --name debian8_memcached14_data;
-		docker volume create --driver local --name debian8_redis32_data;
-		docker volume create --driver local --name debian8_mariadb10_data;
 		docker volume create --driver local --name debian8_web_data;
 		@echo
 		@echo Creating volumes for debian7...
-		docker volume create --driver local --name debian7_memcached14_data;
-		docker volume create --driver local --name debian7_redis32_data;
-		docker volume create --driver local --name debian7_mariadb10_data;
 		docker volume create --driver local --name debian7_web_data;
 		@echo
 		@echo Creating volumes for centos7...
-		docker volume create --driver local --name centos7_memcached14_data;
-		docker volume create --driver local --name centos7_redis32_data;
-		docker volume create --driver local --name centos7_mariadb10_data;
 		docker volume create --driver local --name centos7_web_data;
 		@echo
 		@echo Creating volumes for centos6...
-		docker volume create --driver local --name centos6_memcached14_data;
-		docker volume create --driver local --name centos6_redis32_data;
-		docker volume create --driver local --name centos6_mariadb10_data;
 		docker volume create --driver local --name centos6_web_data;
         else
 		@echo Creating volumes for $(DISTRO)...
-		docker volume create --driver local --name $(DISTRO)_memcached14_data;
-		docker volume create --driver local --name $(DISTRO)_redis32_data;
-		docker volume create --driver local --name $(DISTRO)_mariadb10_data;
 		docker volume create --driver local --name $(DISTRO)_web_data;
         endif
 
@@ -996,33 +720,18 @@ vol-rm:
 	@echo
         ifeq ($(DISTRO), all)
 		@echo Removing volumes for debian8...
-		docker volume rm debian8_memcached14_data;
-		docker volume rm debian8_redis32_data;
-		docker volume rm debian8_mariadb10_data;
 		docker volume rm debian8_web_data;
 		@echo
 		@echo Removing volumes for debian7...
-		docker volume rm debian7_memcached14_data;
-		docker volume rm debian7_redis32_data;
-		docker volume rm debian7_mariadb10_data;
 		docker volume rm debian7_web_data;
 		@echo
 		@echo Removing volumes for centos7...
-		docker volume rm centos7_memcached14_data;
-		docker volume rm centos7_redis32_data;
-		docker volume rm centos7_mariadb10_data;
 		docker volume rm centos7_web_data;
 		@echo
 		@echo Removing volumes for centos6...
-		docker volume rm centos6_memcached14_data;
-		docker volume rm centos6_redis32_data;
-		docker volume rm centos6_mariadb10_data;
 		docker volume rm centos6_web_data;
         else
 		@echo Removing volumes for $(DISTRO)...
-		docker volume rm $(DISTRO)_memcached14_data;
-		docker volume rm $(DISTRO)_redis32_data;
-		docker volume rm $(DISTRO)_mariadb10_data;
 		docker volume rm $(DISTRO)_web_data;
         endif
 
@@ -1033,33 +742,18 @@ vol-inspect:
 	@echo
         ifeq ($(DISTRO), all)
 		@echo Inspecting volumes for debian8...
-		docker volume inspect debian8_memcached14_data;
-		docker volume inspect debian8_redis32_data;
-		docker volume inspect debian8_mariadb10_data;
 		docker volume inspect debian8_web_data;
 		@echo
 		@echo Inspecting volumes for debian7...
-		docker volume inspect debian7_memcached14_data;
-		docker volume inspect debian7_redis32_data;
-		docker volume inspect debian7_mariadb10_data;
 		docker volume inspect debian7_web_data;
 		@echo
 		@echo Inspecting volumes for centos7...
-		docker volume inspect centos7_memcached14_data;
-		docker volume inspect centos7_redis32_data;
-		docker volume inspect centos7_mariadb10_data;
 		docker volume inspect centos7_web_data;
 		@echo
 		@echo Inspecting volumes for centos6...
-		docker volume inspect centos6_memcached14_data;
-		docker volume inspect centos6_redis32_data;
-		docker volume inspect centos6_mariadb10_data;
 		docker volume inspect centos6_web_data;
         else
 		@echo Inspecting volumes for $(DISTRO)...
-		docker volume inspect $(DISTRO)_memcached14_data;
-		docker volume inspect $(DISTRO)_redis32_data;
-		docker volume inspect $(DISTRO)_mariadb10_data;
 		docker volume inspect $(DISTRO)_web_data;
         endif
 

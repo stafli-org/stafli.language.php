@@ -26,37 +26,6 @@ version: '2'
 #
 services:
 
-  memcached14:
-    build:
-      args:
-        app_memcached_listen_port: "11211"
-        app_memcached_limit_backlog: "256"
-        app_memcached_limit_concurent: "256"
-        app_memcached_limit_memory: "128"
-    ports:
-      - "10022"
-      - "11211"
-
-  redis32:
-    build:
-      args:
-        app_redis_listen_port: "6379"
-        app_redis_listen_timeout: "5"
-        app_redis_limit_backlog: "256"
-        app_redis_limit_concurent: "256"
-        app_redis_limit_memory: "134217728"
-    ports:
-      - "10022"
-      - "6379"
-
-  mariadb10:
-    build:
-      args:
-        app_mariadb_listen_port: "3306"
-    ports:
-      - "10022"
-      - "3306"
-
   php56:
     build:
       args:
@@ -75,37 +44,4 @@ services:
     ports:
       - "10022"
       - "9000"
-
-  httpd24_web:
-    build:
-      args:
-        app_httpd_global_listen_port_http: "8080"
-        app_httpd_global_listen_port_https: "8443"
-        app_httpd_global_listen_timeout: "140"
-        app_httpd_global_listen_keepalive_status: "On"
-        app_httpd_global_listen_keepalive_requests: "100"
-        app_httpd_global_listen_keepalive_timeout: "5"
-        app_httpd_vhost_listen_port_http: "8080"
-        app_httpd_vhost_listen_port_https: "8443"
-        app_httpd_vhost_fpm_port: "9000"
-    ports:
-      - "10022"
-      - "8080"
-      - "8443"
-
-  httpd24_proxy:
-    build:
-      args:
-        app_httpd_global_listen_port_http: "8080"
-        app_httpd_global_listen_port_https: "8443"
-        app_httpd_global_listen_timeout: "145"
-        app_httpd_global_listen_keepalive_status: "On"
-        app_httpd_global_listen_keepalive_requests: "100"
-        app_httpd_global_listen_keepalive_timeout: "5"
-        app_httpd_vhost_listen_port_http: "8080"
-        app_httpd_vhost_listen_port_https: "8443"
-    ports:
-      - "10022"
-      - "8080"
-      - "8443"
 
