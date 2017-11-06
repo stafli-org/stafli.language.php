@@ -41,7 +41,7 @@ services:
       - "architecture=$BUILD_ARCH"
       - "org.label-schema.version=$BUILD_VERSION"
       - "org.label-schema.build-date=$BUILD_DATE"
-    image: "solict/high-performance-php-stack:centos6_php56"
+    image: "stafli/stafli.php.language:centos6_php56"
     build:
       context: "./dockerfiles"
       dockerfile: "php56.dockerfile"
