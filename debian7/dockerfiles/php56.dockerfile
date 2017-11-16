@@ -20,7 +20,6 @@
 #
 
 FROM stafli/stafli.devel.system:debian7_devel
-MAINTAINER Luís Pedro Algarvio <lp.algarvio@gmail.com>
 
 #
 # Arguments

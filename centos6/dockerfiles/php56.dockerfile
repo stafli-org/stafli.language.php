@@ -20,7 +20,6 @@
 #
 
 FROM stafli/stafli.devel.system:centos6_devel
-MAINTAINER Luís Pedro Algarvio <lp.algarvio@gmail.com>
 
 #
 # Arguments
