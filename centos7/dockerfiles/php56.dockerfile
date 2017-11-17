@@ -303,7 +303,7 @@ RUN printf "Updading Supervisor configuration...\n"; \
     # /etc/supervisord.d/init.conf \
     file="/etc/supervisord.d/init.conf"; \
     printf "\n# Applying configuration for ${file}...\n"; \
-    perl -0p -i -e "s>supervisorctl start dropbear;>supervisorctl start dropbear; supervisorctl start phpfpm;>" ${file}; \
+    perl -0p -i -e "s>supervisorctl start crond;>supervisorctl start crond; supervisorctl start phpfpm;>" ${file}; \
     printf "Done patching ${file}...\n"; \
     \
     # /etc/supervisord.d/phpfpm.conf \
