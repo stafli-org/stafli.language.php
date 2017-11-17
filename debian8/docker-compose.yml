@@ -91,9 +91,6 @@ services:
         app_fpm_pool_pm_max_requests: "5000"
     logging:
       driver: "json-file"
-    networks:
-      - application
-      - backend
     volumes:
       - web_data:/var/www
     ports:
@@ -101,17 +98,6 @@ services:
       - "9000"
     working_dir: "/tmp"
     command: "/usr/bin/supervisord -c /etc/supervisor/supervisord.conf --nodaemon"
-
-#
-# Networks
-#
-networks:
-  default:
-    driver: "bridge"
-  application:
-    driver: "bridge"
-  backend:
-    driver: "bridge"
 
 #
 # Volumes

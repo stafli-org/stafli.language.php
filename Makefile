@@ -63,11 +63,6 @@ Available commands:\n\
   - con-top:		Shows processes of containers, using docker.\n\
   - con-logs:		Shows logs of containers, using docker-compose.\n\
   - con-events:		Shows events of containers, using docker-compose.\n\
-- for networks:\n\
-  - net-ls:		Lists networks, using docker network.\n\
-  - net-create:		Creates networks, using docker network.\n\
-  - net-rm:		Removes networks, using docker network.\n\
-  - net-inspect:	Inspects networks, using docker network.\n\
 - for volumes:\n\
   - vol-ls:		Lists volumes, using docker volume.\n\
   - vol-create:		Creates volumes, using docker volume.\n\
@@ -89,7 +84,6 @@ Example #2: quick start, with pull\n\
 \n\
 Example #3: manual steps, with build\n\
  make img-build DISTRO=debian8;\n\
- make net-create DISTRO=debian8;\n\
  make vol-create DISTRO=debian8;\n\
  make con-create DISTRO=debian8;\n\
  make con-start DISTRO=debian8;\n\
@@ -149,27 +143,27 @@ purge:
 		@echo Purging containers, networks, volumes and images for debian8...
 		bash -c "(cd debian8; set -o allexport; source .env; set +o allexport; docker-compose down)";
 		docker volume rm debian8_web_data;
-		docker rmi stafli/stafli.php.language:debian8_php56;
+		docker image rm stafli/stafli.php.language:debian8_php56;
 		@echo
 		@echo Purging containers, networks, volumes and images for debian7...
 		bash -c "(cd debian7; set -o allexport; source .env; set +o allexport; docker-compose down)";
 		docker volume rm debian7_web_data;
-		docker rmi stafli/stafli.php.language:debian7_php56;
+		docker image rm stafli/stafli.php.language:debian7_php56;
 		@echo
 		@echo Purging containers, networks, volumes and images for centos7...
 		bash -c "(cd centos7; set -o allexport; source .env; set +o allexport; docker-compose down)";
 		docker volume rm centos7_web_data;
-		docker rmi stafli/stafli.php.language:centos7_php56;
+		docker image rm stafli/stafli.php.language:centos7_php56;
 		@echo
 		@echo Purging containers, networks, volumes and images for centos6...
 		bash -c "(cd centos6; set -o allexport; source .env; set +o allexport; docker-compose down)";
 		docker volume rm centos6_web_data;
-		docker rmi stafli/stafli.php.language:centos6_php56;
+		docker image rm stafli/stafli.php.language:centos6_php56;
         else
 		@echo Purging containers, networks, volumes and images for $(DISTRO)...
 		bash -c "(cd $(DISTRO); set -o allexport; source .env; set +o allexport; docker-compose down)";
 		docker volume rm $(DISTRO)_web_data;
-		docker rmi stafli/stafli.php.language:$(DISTRO)_php56;
+		docker image rm stafli/stafli.php.language:$(DISTRO)_php56;
         endif
 
 
@@ -179,19 +173,19 @@ img-ls:
 	@echo
         ifeq ($(DISTRO), all)
 		@echo Listing images for debian8...
-		docker images | grep -E "stafli/stafli.php.language.*debian8" | sort -n;
+		docker image ls | grep -E "stafli/stafli.php.language.*debian8" | sort -n;
 		@echo
 		@echo Listing images for debian7...
-		docker images | grep -E "stafli/stafli.php.language.*debian7" | sort -n;
+		docker image ls | grep -E "stafli/stafli.php.language.*debian7" | sort -n;
 		@echo
 		@echo Listing images for centos7...
-		docker images | grep -E "stafli/stafli.php.language.*centos7" | sort -n;
+		docker image ls | grep -E "stafli/stafli.php.language.*centos7" | sort -n;
 		@echo
 		@echo Listing images for centos6...
-		docker images | grep -E "stafli/stafli.php.language.*centos6" | sort -n;
+		docker image ls | grep -E "stafli/stafli.php.language.*centos6" | sort -n;
         else
 		@echo Listing images for $(DISTRO)...
-		docker images | grep -E "stafli/stafli.php.language.*$(DISTRO)" | sort -n;
+		docker image ls | grep -E "stafli/stafli.php.language.*$(DISTRO)" | sort -n;
         endif
 
 
@@ -245,19 +239,19 @@ img-rm:
 	@echo
         ifeq ($(DISTRO), all)
 		@echo Removing images for debian8...
-		docker rmi stafli/stafli.php.language:debian8_php56;
+		docker image rm stafli/stafli.php.language:debian8_php56;
 		@echo
 		@echo Removing images for debian7...
-		docker rmi stafli/stafli.php.language:debian7_php56;
+		docker image rm stafli/stafli.php.language:debian7_php56;
 		@echo
 		@echo Removing images for centos7...
-		docker rmi stafli/stafli.php.language:centos7_php56;
+		docker image rm stafli/stafli.php.language:centos7_php56;
 		@echo
 		@echo Removing images for centos6...
-		docker rmi stafli/stafli.php.language:centos6_php56;
+		docker image rm stafli/stafli.php.language:centos6_php56;
         else
 		@echo Removing images for $(DISTRO)...
-		docker rmi stafli/stafli.php.language:$(DISTRO)_php56;
+		docker image rm stafli/stafli.php.language:$(DISTRO)_php56;
         endif
 
 
@@ -443,19 +437,19 @@ con-inspect:
 	@echo
         ifeq ($(DISTRO), all)
 		@echo Inspecting containers for debian8...
-		docker inspect debian8_php56_1;
+		docker container inspect debian8_php56_1;
 		@echo
 		@echo Inspecting containers for debian7...
-		docker inspect debian7_php56_1;
+		docker container inspect debian7_php56_1;
 		@echo
 		@echo Inspecting containers for centos7...
-		docker inspect centos7_php56_1;
+		docker container inspect centos7_php56_1;
 		@echo
 		@echo Inspecting containers for centos6...
-		docker inspect centos6_php56_1;
+		docker container inspect centos6_php56_1;
         else
 		@echo Inspecting containers for $(DISTRO)...
-		docker inspect $(DISTRO)_php56_1;
+		docker container inspect $(DISTRO)_php56_1;
         endif
 
 con-ips:
@@ -464,19 +458,19 @@ con-ips:
 	@echo
         ifeq ($(DISTRO), all)
 		@echo Showing IP addresses of containers for debian8...
-		docker inspect debian8_php56_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
+		docker container inspect debian8_php56_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
 		@echo
 		@echo Showing IP addresses of containers for debian7...
-		docker inspect debian7_php56_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
+		docker container inspect debian7_php56_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
 		@echo
 		@echo Showing IP addresses of containers for centos7...
-		docker inspect centos7_php56_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
+		docker container inspect centos7_php56_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
 		@echo
 		@echo Showing IP addresses of containers for centos6...
-		docker inspect centos6_php56_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
+		docker container inspect centos6_php56_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
         else
 		@echo Showing IP addresses of containers for $(DISTRO)...
-		docker inspect $(DISTRO)_php56_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
+		docker container inspect $(DISTRO)_php56_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
         endif
 
 
@@ -486,19 +480,19 @@ con-ports:
 	@echo
         ifeq ($(DISTRO), all)
 		@echo Showing ports of containers for debian8...
-		docker port debian8_php56_1;
+		docker container port debian8_php56_1;
 		@echo
 		@echo Showing ports of containers for debian7...
-		docker port debian7_php56_1;
+		docker container port debian7_php56_1;
 		@echo
 		@echo Showing ports of containers for centos7...
-		docker port centos7_php56_1;
+		docker container port centos7_php56_1;
 		@echo
 		@echo Showing ports of containers for centos6...
-		docker port centos6_php56_1;
+		docker container port centos6_php56_1;
         else
 		@echo Showing ports of containers for $(DISTRO)...
-		docker port $(DISTRO)_php56_1;
+		docker container port $(DISTRO)_php56_1;
         endif
 
 
@@ -508,19 +502,19 @@ con-top:
 	@echo
         ifeq ($(DISTRO), all)
 		@echo Showing processes of containers for debian8...
-		docker top debian8_php56_1;
+		docker container top debian8_php56_1;
 		@echo
 		@echo Showing processes of containers for debian7...
-		docker top debian7_php56_1;
+		docker container top debian7_php56_1;
 		@echo
 		@echo Showing processes of containers for centos7...
-		docker top centos7_php56_1;
+		docker container top centos7_php56_1;
 		@echo
 		@echo Showing processes of containers for centos6...
-		docker top centos6_php56_1;
+		docker container top centos6_php56_1;
         else
 		@echo Showing processes of containers for $(DISTRO)...
-		docker top $(DISTRO)_php56_1;
+		docker container top $(DISTRO)_php56_1;
         endif
 
 
@@ -565,109 +559,6 @@ con-events:
         else
 		@echo Showing events of containers for $(DISTRO)...
 		bash -c "(cd $(DISTRO); set -o allexport; source .env; set +o allexport; docker-compose events)";
-        endif
-
-
-net-ls:
-	@echo
-	@echo Listing networks...
-	@echo
-        ifeq ($(DISTRO), all)
-		@echo Listing networks for debian8...
-		docker network ls | grep -E "debian8" | sort -n;
-		@echo
-		@echo Listing networks for debian7...
-		docker network ls | grep -E "debian7" | sort -n;
-		@echo
-		@echo Listing networks for centos7...
-		docker network ls | grep -E "centos7" | sort -n;
-		@echo
-		@echo Listing networks for centos6...
-		docker network ls | grep -E "centos6" | sort -n;
-        else
-		@echo Listing networks for $(DISTRO)...
-		docker network ls | grep -E "$(DISTRO)" | sort -n;
-        endif
-
-
-net-create:
-	@echo
-	@echo Creating networks...
-	@echo
-        ifeq ($(DISTRO), all)
-		@echo Creating networks for debian8...
-		docker network create debian8_application;
-		docker network create debian8_backend;
-		@echo
-		@echo Creating networks for debian7...
-		docker network create debian7_application;
-		docker network create debian7_backend;
-		@echo
-		@echo Creating networks for centos7...
-		docker network create centos7_application;
-		docker network create centos7_backend;
-		@echo
-		@echo Creating networks for centos6...
-		docker network create centos6_application;
-		docker network create centos6_backend;
-        else
-		@echo Creating networks for $(DISTRO)...
-		docker network create $(DISTRO)_application;
-		docker network create $(DISTRO)_backend;
-        endif
-
-
-net-rm:
-	@echo
-	@echo Removing networks...
-	@echo
-        ifeq ($(DISTRO), all)
-		@echo Removing networks for debian8...
-		docker network rm debian8_application;
-		docker network rm debian8_backend;
-		@echo
-		@echo Removing networks for debian7...
-		docker network rm debian7_application;
-		docker network rm debian7_backend;
-		@echo
-		@echo Removing networks for centos7...
-		docker network rm centos7_application;
-		docker network rm centos7_backend;
-		@echo
-		@echo Removing networks for centos6...
-		docker network rm centos6_application;
-		docker network rm centos6_backend;
-        else
-		@echo Removing networks for $(DISTRO)...
-		docker network rm $(DISTRO)_application;
-		docker network rm $(DISTRO)_backend;
-        endif
-
-
-net-inspect:
-	@echo
-	@echo Inspecting networks...
-	@echo
-        ifeq ($(DISTRO), all)
-		@echo Inspecting networks for debian8...
-		docker network inspect debian8_application;
-		docker network inspect debian8_backend;
-		@echo
-		@echo Inspecting networks for debian7...
-		docker network inspect debian7_application;
-		docker network inspect debian7_backend;
-		@echo
-		@echo Inspecting networks for centos7...
-		docker network inspect centos7_application;
-		docker network inspect centos7_backend;
-		@echo
-		@echo Inspecting networks for centos6...
-		docker network inspect centos6_application;
-		docker network inspect centos6_backend;
-        else
-		@echo Inspecting networks for $(DISTRO)...
-		docker network inspect $(DISTRO)_application;
-		docker network inspect $(DISTRO)_backend;
         endif
 
 

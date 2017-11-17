@@ -88,7 +88,6 @@ make up DISTRO=debian8;
 
 # Example #3: manual steps, with build
 make img-build DISTRO=debian8;
-make net-create DISTRO=debian8;
 make vol-create DISTRO=debian8;
 make con-create DISTRO=debian8;
 make con-start DISTRO=debian8;
