@@ -297,7 +297,7 @@ RUN printf "Updading Supervisor configuration...\n"; \
     # /etc/supervisor/conf.d/init.conf \
     file="/etc/supervisor/conf.d/init.conf"; \
     printf "\n# Applying configuration for ${file}...\n"; \
-    perl -0p -i -e "s>supervisorctl start crond;>supervisorctl start crond; supervisorctl start phpfpm;>" ${file}; \
+    perl -0p -i -e "s>supervisorctl start rclocal;>supervisorctl start rclocal; supervisorctl start phpfpm;>" ${file}; \
     printf "Done patching ${file}...\n"; \
     \
     # /etc/supervisor/conf.d/phpfpm.conf \
