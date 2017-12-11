@@ -27,7 +27,7 @@ version: '2'
 #
 services:
 
-  debian8_php56_language:
+  language_php56_debian8:
     build:
       args:
         app_php_global_limit_timeout: "120"

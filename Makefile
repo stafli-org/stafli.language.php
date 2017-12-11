@@ -142,28 +142,28 @@ purge:
         ifeq ($(DISTRO), all)
 		@echo Purging containers, networks, volumes and images for debian8...
 		bash -c "(cd debian8; set -o allexport; source .env; set +o allexport; docker-compose down)";
-		docker volume rm stafli_debian8_php56_language_data;
-		docker image rm stafli/stafli.php.language:debian8_php56;
+		docker volume rm stafli_language_php56_debian8_data;
+		docker image rm stafli/stafli.language.php:php56_debian8;
 		@echo
 		@echo Purging containers, networks, volumes and images for debian7...
 		bash -c "(cd debian7; set -o allexport; source .env; set +o allexport; docker-compose down)";
-		docker volume rm stafli_debian7_php56_language_data;
-		docker image rm stafli/stafli.php.language:debian7_php56;
+		docker volume rm stafli_language_php56_debian7_data;
+		docker image rm stafli/stafli.language.php:php56_debian7;
 		@echo
 		@echo Purging containers, networks, volumes and images for centos7...
 		bash -c "(cd centos7; set -o allexport; source .env; set +o allexport; docker-compose down)";
-		docker volume rm stafli_centos7_php56_language_data;
-		docker image rm stafli/stafli.php.language:centos7_php56;
+		docker volume rm stafli_language_php56_centos7_data;
+		docker image rm stafli/stafli.language.php:php56_centos7;
 		@echo
 		@echo Purging containers, networks, volumes and images for centos6...
 		bash -c "(cd centos6; set -o allexport; source .env; set +o allexport; docker-compose down)";
-		docker volume rm stafli_centos6_php56_language_data;
-		docker image rm stafli/stafli.php.language:centos6_php56;
+		docker volume rm stafli_language_php56_centos6_data;
+		docker image rm stafli/stafli.language.php:php56_centos6;
         else
 		@echo Purging containers, networks, volumes and images for $(DISTRO)...
 		bash -c "(cd $(DISTRO); set -o allexport; source .env; set +o allexport; docker-compose down)";
-		docker volume rm stafli_$(DISTRO)_php56_language_data;
-		docker image rm stafli/stafli.php.language:$(DISTRO)_php56;
+		docker volume rm stafli_language_php56_$(DISTRO)_data;
+		docker image rm stafli/stafli.language.php:php56_$(DISTRO);
         endif
 
 
@@ -173,19 +173,19 @@ img-ls:
 	@echo
         ifeq ($(DISTRO), all)
 		@echo Listing images for debian8...
-		docker image ls | grep -E "stafli/stafli.php.language.*debian8" | sort -n;
+		docker image ls | grep -E "stafli/stafli.language.php.*debian8" | sort -n;
 		@echo
 		@echo Listing images for debian7...
-		docker image ls | grep -E "stafli/stafli.php.language.*debian7" | sort -n;
+		docker image ls | grep -E "stafli/stafli.language.php.*debian7" | sort -n;
 		@echo
 		@echo Listing images for centos7...
-		docker image ls | grep -E "stafli/stafli.php.language.*centos7" | sort -n;
+		docker image ls | grep -E "stafli/stafli.language.php.*centos7" | sort -n;
 		@echo
 		@echo Listing images for centos6...
-		docker image ls | grep -E "stafli/stafli.php.language.*centos6" | sort -n;
+		docker image ls | grep -E "stafli/stafli.language.php.*centos6" | sort -n;
         else
 		@echo Listing images for $(DISTRO)...
-		docker image ls | grep -E "stafli/stafli.php.language.*$(DISTRO)" | sort -n;
+		docker image ls | grep -E "stafli/stafli.language.php.*$(DISTRO)" | sort -n;
         endif
 
 
@@ -239,19 +239,19 @@ img-rm:
 	@echo
         ifeq ($(DISTRO), all)
 		@echo Removing images for debian8...
-		docker image rm stafli/stafli.php.language:debian8_php56;
+		docker image rm stafli/stafli.language.php:php56_debian8;
 		@echo
 		@echo Removing images for debian7...
-		docker image rm stafli/stafli.php.language:debian7_php56;
+		docker image rm stafli/stafli.language.php:php56_debian7;
 		@echo
 		@echo Removing images for centos7...
-		docker image rm stafli/stafli.php.language:centos7_php56;
+		docker image rm stafli/stafli.language.php:php56_centos7;
 		@echo
 		@echo Removing images for centos6...
-		docker image rm stafli/stafli.php.language:centos6_php56;
+		docker image rm stafli/stafli.language.php:php56_centos6;
         else
 		@echo Removing images for $(DISTRO)...
-		docker image rm stafli/stafli.php.language:$(DISTRO)_php56;
+		docker image rm stafli/stafli.language.php:php56_$(DISTRO);
         endif
 
 
@@ -437,19 +437,19 @@ con-inspect:
 	@echo
         ifeq ($(DISTRO), all)
 		@echo Inspecting containers for debian8...
-		docker container inspect stafli_debian8_php56_language_1;
+		docker container inspect stafli_language_php56_debian8_1;
 		@echo
 		@echo Inspecting containers for debian7...
-		docker container inspect stafli_debian7_php56_language_1;
+		docker container inspect stafli_language_php56_debian7_1;
 		@echo
 		@echo Inspecting containers for centos7...
-		docker container inspect stafli_centos7_php56_language_1;
+		docker container inspect stafli_language_php56_centos7_1;
 		@echo
 		@echo Inspecting containers for centos6...
-		docker container inspect stafli_centos6_php56_language_1;
+		docker container inspect stafli_language_php56_centos6_1;
         else
 		@echo Inspecting containers for $(DISTRO)...
-		docker container inspect stafli_$(DISTRO)_php56_language_1;
+		docker container inspect stafli_language_php56_$(DISTRO)_1;
         endif
 
 con-ips:
@@ -458,19 +458,19 @@ con-ips:
 	@echo
         ifeq ($(DISTRO), all)
 		@echo Showing IP addresses of containers for debian8...
-		docker container inspect stafli_debian8_php56_language_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
+		docker container inspect stafli_language_php56_debian8_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
 		@echo
 		@echo Showing IP addresses of containers for debian7...
-		docker container inspect stafli_debian7_php56_language_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
+		docker container inspect stafli_language_php56_debian7_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
 		@echo
 		@echo Showing IP addresses of containers for centos7...
-		docker container inspect stafli_centos7_php56_language_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
+		docker container inspect stafli_language_php56_centos7_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
 		@echo
 		@echo Showing IP addresses of containers for centos6...
-		docker container inspect stafli_centos6_php56_language_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
+		docker container inspect stafli_language_php56_centos6_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
         else
 		@echo Showing IP addresses of containers for $(DISTRO)...
-		docker container inspect stafli_$(DISTRO)_php56_language_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
+		docker container inspect stafli_language_php56_$(DISTRO)_1 | grep -e "inspect" -e "\"NetworkID\"" -B 0 -A 8;
         endif
 
 
@@ -480,19 +480,19 @@ con-ports:
 	@echo
         ifeq ($(DISTRO), all)
 		@echo Showing ports of containers for debian8...
-		docker container port stafli_debian8_php56_language_1;
+		docker container port stafli_language_php56_debian8_1;
 		@echo
 		@echo Showing ports of containers for debian7...
-		docker container port stafli_debian7_php56_language_1;
+		docker container port stafli_language_php56_debian7_1;
 		@echo
 		@echo Showing ports of containers for centos7...
-		docker container port stafli_centos7_php56_language_1;
+		docker container port stafli_language_php56_centos7_1;
 		@echo
 		@echo Showing ports of containers for centos6...
-		docker container port stafli_centos6_php56_language_1;
+		docker container port stafli_language_php56_centos6_1;
         else
 		@echo Showing ports of containers for $(DISTRO)...
-		docker container port stafli_$(DISTRO)_php56_language_1;
+		docker container port stafli_language_php56_$(DISTRO)_1;
         endif
 
 
@@ -502,19 +502,19 @@ con-top:
 	@echo
         ifeq ($(DISTRO), all)
 		@echo Showing processes of containers for debian8...
-		docker container top stafli_debian8_php56_language_1;
+		docker container top stafli_language_php56_debian8_1;
 		@echo
 		@echo Showing processes of containers for debian7...
-		docker container top stafli_debian7_php56_language_1;
+		docker container top stafli_language_php56_debian7_1;
 		@echo
 		@echo Showing processes of containers for centos7...
-		docker container top stafli_centos7_php56_language_1;
+		docker container top stafli_language_php56_centos7_1;
 		@echo
 		@echo Showing processes of containers for centos6...
-		docker container top stafli_centos6_php56_language_1;
+		docker container top stafli_language_php56_centos6_1;
         else
 		@echo Showing processes of containers for $(DISTRO)...
-		docker container top stafli_$(DISTRO)_php56_language_1;
+		docker container top stafli_language_php56_$(DISTRO)_1;
         endif
 
 
@@ -590,19 +590,19 @@ vol-create:
 	@echo
         ifeq ($(DISTRO), all)
 		@echo Creating volumes for debian8...
-		docker volume create --driver local --name stafli_debian8_php56_language_data;
+		docker volume create --driver local --name stafli_language_php56_debian8_data;
 		@echo
 		@echo Creating volumes for debian7...
-		docker volume create --driver local --name stafli_debian7_php56_language_data;
+		docker volume create --driver local --name stafli_language_php56_debian7_data;
 		@echo
 		@echo Creating volumes for centos7...
-		docker volume create --driver local --name stafli_centos7_php56_language_data;
+		docker volume create --driver local --name stafli_language_php56_centos7_data;
 		@echo
 		@echo Creating volumes for centos6...
-		docker volume create --driver local --name stafli_centos6_php56_language_data;
+		docker volume create --driver local --name stafli_language_php56_centos6_data;
         else
 		@echo Creating volumes for $(DISTRO)...
-		docker volume create --driver local --name stafli_$(DISTRO)_php56_language_data;
+		docker volume create --driver local --name stafli_language_php56_$(DISTRO)_data;
         endif
 
 
@@ -612,19 +612,19 @@ vol-rm:
 	@echo
         ifeq ($(DISTRO), all)
 		@echo Removing volumes for debian8...
-		docker volume rm stafli_debian8_php56_language_data;
+		docker volume rm stafli_language_php56_debian8_data;
 		@echo
 		@echo Removing volumes for debian7...
-		docker volume rm stafli_debian7_php56_language_data;
+		docker volume rm stafli_language_php56_debian7_data;
 		@echo
 		@echo Removing volumes for centos7...
-		docker volume rm stafli_centos7_php56_language_data;
+		docker volume rm stafli_language_php56_centos7_data;
 		@echo
 		@echo Removing volumes for centos6...
-		docker volume rm stafli_centos6_php56_language_data;
+		docker volume rm stafli_language_php56_centos6_data;
         else
 		@echo Removing volumes for $(DISTRO)...
-		docker volume rm stafli_$(DISTRO)_php56_language_data;
+		docker volume rm stafli_language_php56_$(DISTRO)_data;
         endif
 
 
@@ -634,19 +634,19 @@ vol-inspect:
 	@echo
         ifeq ($(DISTRO), all)
 		@echo Inspecting volumes for debian8...
-		docker volume inspect stafli_debian8_php56_language_data;
+		docker volume inspect stafli_language_php56_debian8_data;
 		@echo
 		@echo Inspecting volumes for debian7...
-		docker volume inspect stafli_debian7_php56_language_data;
+		docker volume inspect stafli_language_php56_debian7_data;
 		@echo
 		@echo Inspecting volumes for centos7...
-		docker volume inspect stafli_centos7_php56_language_data;
+		docker volume inspect stafli_language_php56_centos7_data;
 		@echo
 		@echo Inspecting volumes for centos6...
-		docker volume inspect stafli_centos6_php56_language_data;
+		docker volume inspect stafli_language_php56_centos6_data;
         else
 		@echo Inspecting volumes for $(DISTRO)...
-		docker volume inspect stafli_$(DISTRO)_php56_language_data;
+		docker volume inspect stafli_language_php56_$(DISTRO)_data;
         endif
 
 

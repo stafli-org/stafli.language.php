@@ -19,7 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-FROM stafli/stafli.devel.system:centos6_devel
+FROM stafli/stafli.system.devel:devel10_centos6
 
 #
 # Arguments

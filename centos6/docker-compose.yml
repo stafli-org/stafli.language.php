@@ -27,7 +27,7 @@ version: '2'
 #
 services:
 
-  centos6_php56_language:
+  language_php56_centos6:
     labels:
       - "org.label-schema.schema-version=1.0"
       - "org.label-schema.name=$PROJECT_NAME"
@@ -54,7 +54,7 @@ services:
       - "org.label-schema.os-architecture=$BUILD_ARCH"
       - "org.label-schema.version=$BUILD_VERSION"
       - "org.label-schema.build-date=$BUILD_DATE"
-    image: "${IMAGE_URL_PREFIX}:centos6_php56"
+    image: "${IMAGE_URL_PREFIX}:php56_centos6"
     build:
       context: "./dockerfiles"
       dockerfile: "php56.dockerfile"
@@ -92,7 +92,7 @@ services:
     logging:
       driver: "json-file"
     volumes:
-      - centos6_php56_language_data:/var/www
+      - language_php56_centos6_data:/var/www
     ports:
       - "9000"
     working_dir: "/tmp"
@@ -102,6 +102,6 @@ services:
 # Volumes
 #
 volumes:
-  centos6_php56_language_data:
+  language_php56_centos6_data:
     driver: "local"
 
