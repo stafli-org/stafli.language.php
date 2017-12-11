@@ -27,7 +27,7 @@ version: '2'
 #
 services:
 
-  php56:
+  centos6_php56_language:
     build:
       args:
         app_php_global_limit_timeout: "120"
