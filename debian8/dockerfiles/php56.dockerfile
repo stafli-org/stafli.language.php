@@ -24,14 +24,14 @@
 #
 
 # Base image to use
-FROM stafli/stafli.system.devel:devel10_debian8
+FROM stafli/stafli.init.supervisor:supervisor30_debian8
 
 # Labels to apply
-LABEL description="Stafli PHP Language (stafli/stafli.language.php), Based on Stafli Base System (stafli/stafli.system.base)" \
+LABEL description="Stafli PHP Language (stafli/stafli.language.php), Based on Stafli Supervisor Init (stafli/stafli.init.supervisor)" \
       maintainer="lp@algarvio.org" \
       org.label-schema.schema-version="1.0.0-rc.1" \
       org.label-schema.name="Stafli PHP Language (stafli/stafli.language.php)" \
-      org.label-schema.description="Based on Stafli Base System (stafli/stafli.system.base)" \
+      org.label-schema.description="Based on Stafli Supervisor Init (stafli/stafli.init.supervisor)" \
       org.label-schema.keywords="stafli, php, language, debian, centos" \
       org.label-schema.url="https://stafli.org/" \
       org.label-schema.license="GPLv3" \
@@ -72,11 +72,11 @@ ARG app_fpm_global_limit_processes="128"
 ARG app_fpm_pool_id="default"
 ARG app_fpm_pool_user="www-data"
 ARG app_fpm_pool_group="www-data"
-ARG app_fpm_pool_listen_wlist="0.0.0.0"
-ARG app_fpm_pool_listen_addr="0.0.0.0"
+ARG app_fpm_pool_listen_wlist=""
+ARG app_fpm_pool_listen_addr="[::]"
 ARG app_fpm_pool_listen_port="9000"
 ARG app_fpm_pool_limit_descriptors="1024"
-ARG app_fpm_pool_limit_backlog="256"
+ARG app_fpm_pool_limit_backlog="65536"
 ARG app_fpm_pool_pm_method="dynamic"
 ARG app_fpm_pool_pm_max_children="100"
 ARG app_fpm_pool_pm_start_servers="20"
@@ -104,24 +104,36 @@ ARG app_fpm_pool_pm_max_requests="5000"
 # Add foreign repositories and GPG keys
 #  - N/A: for MariaDB
 #  - N/A: for Dotdeb
+# Install crypto packages
+#  - openssl: for openssl, the OpenSSL cryptographic utility required for many packages
+#  - ca-certificates: adds trusted PEM files of CA certificates to the system
 # Install php packages
+#  - php5: the server-side, HTML-embedded scripting language (metapackage)
 #  - php5-common: the PHP common libraries and files
-#  - php5-dev: the PHP development libraries and files
 #  - php-pear: the PEAR package manager
 #  - php5-cli: for php5, the PHP CLI (command line interface)
 #  - php5-fpm: the PHP FPM (fast process manager)
+#  - php5-gmp: the PHP GMP (GNU Multiple Precision) arithmetic extension
 #  - php5-mcrypt: the PHP Mcrypt extension
+#  - php5-json: the PHP JSON (JavaScript Object Notation) extension
+#  - php5-xmlrpc: the PHP XML-RPC (Extensible Markup Language - Remote Procedure Call) extension
+#  - php5-gd: the PHP GD (Graphics Draw) extension
+#  - php5-imap: the PHP IMAP (IMAP, POP3 and NNTP) extension
+#  - php5-geoip: the PHP GeoIP extension
 #  - php5-curl: the PHP cURL extension
-#  - php5-gd: the PHP GD extension
-#  - php5-imap: the PHP IMAP extension
-#  - php5-ldap: the PHP LDAP extension
-#  - php5-mysqlnd: the PHP MariaDB Native Driver extension
-#  - php5-odbc: the PHP ODBC extension
-#  - libyaml-dev: the YAML library - development files
-#  - libmemcached-dev: the Memcached library - development files
+#  - php5-ssh2: the PHP SSH2 (Secure Shell version 2) extension
+#  - php5-sasl: the PHP SASL (Simple Authentication and Security Layer) extension
+#  - php5-ldap: the PHP LDAP (Lightweight Directory Access Protocol) extension
+#  - php5-mysqlnd: the PHP MySQLND (MySQL Native Driver) extension
+#  - php5-pgsql: the PHP PgSQL (PostgreSQL) extension
+#  - php5-sqlite: the PHP SQLite extension
+#  - php5-odbc: the PHP ODBC (Open Database Connectivity) extension
 # Install utilities and clients packages
 #  - apache2-utils: for ab and others, the HTTPd utilities
+#  - libfcgi0ldbl: the Shared library of FastCGI, which includes the command cgi-fcgi
 #  - mariadb-client: for mysql, the MariaDB client
+#  - postgresql-client: for psql, the front-end programs for PostgreSQL
+#  - sqlite3: for sqlite, the Command line interface for SQLite 3
 #  - redis-tools: for redis-cli, the Redis client
 RUN printf "Installing repositories and packages...\n" && \
     \
@@ -136,19 +148,26 @@ deb http://packages.dotdeb.org jessie all\n\
     apt-key adv --fetch-keys http://www.dotdeb.org/dotdeb.gpg && \
     gpg --refresh-keys && \
     \
+    printf "Install the crypto packages...\n" && \
+    apt-get update && apt-get install -qy \
+      openssl ca-certificates && \
+    \
     printf "Install the php packages...\n" && \
     apt-get update && apt-get install -qy \
-      php5-common php5-dev php-pear \
+      php5 php5-common php-pear \
       php5-cli php5-fpm \
-      php5-mcrypt php5-curl \
+      php5-gmp php5-mcrypt \
+      php5-json php5-xmlrpc \
       php5-gd php5-imap \
-      php5-ldap \
-      php5-mysqlnd php5-odbc \
-      libyaml-dev libmemcached-dev && \
+      php5-geoip php5-curl php5-ssh2 \
+      php5-sasl php5-ldap \
+      php5-mysqlnd php5-pgsql php5-sqlite php5-odbc && \
     \
     printf "Install the utilities and clients packages...\n" && \
     apt-get update && apt-get install -qy \
-      apache2-utils mariadb-client redis-tools && \
+      apache2-utils libfcgi0ldbl \
+      mariadb-client postgresql-client sqlite3 \
+      redis-tools && \
     \
     printf "Cleanup the package manager...\n" && \
     apt-get clean && rm -rf /var/lib/apt/lists/* && \
@@ -159,6 +178,41 @@ deb http://packages.dotdeb.org jessie all\n\
 # PHP extensions
 #
 
+# Install binary library packages
+#  - libssl1.0.0, the Secure Sockets Layer toolkit - shared libraries (required for running)
+#  - libcurl3, the easy-to-use client-side URL transfer library (OpenSSL flavour) (required for running)
+#  - libsasl2-2, the Cyrus SASL - authentication abstraction library (required for running)
+#  - libxml2, the GNOME XML library (required for running)
+#  - zlib1g, the compression library - runtime (required for running)
+#  - libyaml-0-2, the Fast YAML 1.1 parser and emitter library (required for running)
+#  - libmemcached11, the C and C++ client library to the memcached server (required for running)
+# Install php packages
+#  - php5-dev: the PHP development libraries and files (required for compiling)
+# Install parser packages
+#  - gawk: for gawk, GNU awk, a pattern scanning and processing language
+#  - m4: for m4, the GNU m4 which is an interpreter for a macro processing language (required for compiling)
+#  - re2c: for r2ec, a tool for generating fast C-based recognizers
+# Install build tools packages
+#  - make: for make, the GNU make which is an utility for Directing compilation
+#  - automake: for automake, a tool for generating GNU Standards-compliant Makefiles (required for compiling)
+#  - autoconf: for autoconf, a automatic configure script builder for FSF source packages (required for compiling)
+#  - pkg-config: for pkg-config, a tool to manage compile and link flags for libraries (required for compiling)
+#  - libtool: for GNU libtool, a generic library support script (required for compiling)
+# Install compiler packages
+#  - cpp: for cpp, the GNU C preprocessor (cpp) for the C Programming language (required for compiling)
+#  - gcc: for gcc, the GNU C compiler (required for compiling)
+#  - g++: for g++, the GNU C++ compiler (required for compiling)
+# Install library packages
+#  - linux-libc-dev: the Linux Kernel - Headers for development (required for compiling)
+#  - libc6-dev: the Embedded GNU C Library - Development Libraries and Header Files (required for compiling)
+#  - libpcre3-dev: the Perl 5 Compatible Regular Expression Library - development files (required for compiling)
+#  - libssl-dev: the OpenSSL toolkit - development files (required for compiling)
+#  - libcurl4-openssl-dev: the CURL library - development files (OpenSSL version)
+#  - libsasl2-dev: the Cyrus SASL library - development files
+#  - libxml2-dev: the GNOME XML library - development files
+#  - zlib1g-dev:  the ZLib library - development files (required for compiling)
+#  - libyaml-dev: the YAML library - development files
+#  - libmemcached-dev: the Memcached library - development files
 # Build and install php extensions
 #  - Binary API (igbinary)
 #  - MessagePack (msgpack)
@@ -170,10 +224,35 @@ deb http://packages.dotdeb.org jessie all\n\
 #  - Redis
 #  - Xdebug
 #  - XHProf
+# Remove the various development packages
+# Enable/disable php extensions
 RUN printf "Start installing extensions...\n" && \
+    \
+    printf "Install the runtime packages...\n" && \
+    apt-get update && apt-get install -qy \
+      libssl1.0.0 libcurl3 \
+      libsasl2-2 \
+      libxml2 zlib1g \
+      libyaml-0-2 libmemcached11 && \
+    \
+    printf "Install the development packages...\n" && \
+    packages_devel=" \
+      php5-dev \
+      gawk m4 re2c \
+      make automake autoconf pkg-config libtool \
+      cpp gcc g++ \
+      linux-libc-dev libc6-dev libpcre3-dev \
+      libssl-dev libcurl4-openssl-dev \
+      libsasl2-dev \
+      libxml2-dev zlib1g-dev \
+      libyaml-dev libmemcached-dev \
+" && \
+    apt-get update && apt-get install -qy \
+      ${packages_devel} && \
     \
     printf "Building the Binary API (deb: N/A) extension...\n" && \
     $(which pecl) install igbinary-1.2.1 && \
+    $(which pecl) install igbinary-2.0.5 && \
     echo "extension=igbinary.so" > /etc/php5/mods-available/igbinary.ini && \
     rm -rf /tmp/pear && \
     \
@@ -184,6 +263,7 @@ RUN printf "Start installing extensions...\n" && \
     \
     printf "Building the YAML (deb: N/A) extension...\n" && \
     $(which pecl) install yaml-1.2.0 && \
+    $(which pecl) install yaml-1.3.1 && \
     echo "extension=yaml.so" > /etc/php5/mods-available/yaml.ini && \
     rm -rf /tmp/pear && \
     \
@@ -193,7 +273,8 @@ RUN printf "Start installing extensions...\n" && \
     rm -rf /tmp/pear && \
     \
     printf "Building the MongoDB (deb: php5-mongo) extension...\n" && \
-    $(which pecl) install mongodb-1.1.6 && \
+    $(which pecl) install mongodb-1.1.9 && \
+    $(which pecl) install mongodb-1.3.4 && \
     echo "extension=mongodb.so" > /etc/php5/mods-available/mongodb.ini && \
     rm -rf /tmp/pear && \
     \
@@ -205,7 +286,7 @@ RUN printf "Start installing extensions...\n" && \
     \
     printf "Building the Memcached (deb: php5-memcached) extension...\n" && \
     ( \
-      wget -qO- https://github.com/php-memcached-dev/php-memcached/archive/2.2.0.tar.gz | tar xz && cd php-memcached-2.2.0 && \
+      curl -sL https://github.com/php-memcached-dev/php-memcached/archive/2.2.0.tar.gz | tar xz && cd php-memcached-2.2.0 && \
       perl -0p -i -e "s><extsrcrelease\>><extsrcrelease\>\n\
   <configureoption name=\"enable-memcached-sasl\" default=\"yes\" prompt=\"Enable SASL\"/\>\n\
   <configureoption name=\"enable-memcached-json\" default=\"yes\" prompt=\"Enable JSON\"/\>\n\
@@ -221,19 +302,19 @@ RUN printf "Start installing extensions...\n" && \
     \
     printf "Building the Redis (deb: php5-redis) extension...\n" && \
     ( \
-      wget -qO- https://github.com/phpredis/phpredis/archive/2.2.7.tar.gz | tar xz && cd phpredis-2.2.7 && \
-      perl -0p -i -e "s>2.2.5>2.2.7>g" package.xml rpm/php-redis.spec && \
+      curl -sL https://github.com/phpredis/phpredis/archive/2.2.8.tar.gz | tar xz && cd phpredis-2.2.8 && \
       perl -0p -i -e "s><extsrcrelease/\>><extsrcrelease\>\n\
   <configureoption name=\"enable-redis-igbinary\" default=\"yes\" prompt=\"Enable igbinary\"/\>\n\
  </extsrcrelease\>>" package.xml && \
       $(which pecl) install package.xml && \
-      cd .. && rm -Rf phpredis-2.2.7 \
+      cd .. && rm -Rf phpredis-2.2.8 \
     ) && \
     echo "extension=redis.so" > /etc/php5/mods-available/redis.ini && \
     rm -rf /tmp/pear && \
     \
     printf "Building the Xdebug (deb: php5-xdebug) extension...\n" && \
-    $(which pecl) install xdebug-2.4.0 && \
+    $(which pecl) install xdebug-2.4.1 && \
+    $(which pecl) install xdebug-2.5.5 && \
     echo "zend_extension=xdebug.so" > /etc/php5/mods-available/xdebug.ini && \
     rm -rf /tmp/pear && \
     \
@@ -244,6 +325,13 @@ RUN printf "Start installing extensions...\n" && \
     \
     printf "Done building extensions...\n" && \
     \
+    printf "Remove the various development packages...\n" && \
+    apt-get remove --purge ${packages_devel} -qy && \
+    apt-get autoremove --purge -qy && \
+    \
+    printf "Cleanup the package manager...\n" && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* && \
+    \
     printf "Enabling/disabling extensions...\n" && \
     # Core extensions \
     $(which php5dismod) -f ${app_php_exts_core_dis} && \
@@ -253,7 +341,7 @@ RUN printf "Start installing extensions...\n" && \
     $(which php5enmod) -f ${app_php_exts_extra_en} && \
     printf "Done enabling/disabling extensions...\n" && \
     \
-    printf "\n# Checking extensions...\n" && \
+    printf "\nChecking extensions...\n" && \
     $(which php) -m && \
     printf "Done checking extensions...\n" && \
     \
@@ -350,6 +438,12 @@ RUN printf "Updading Supervisor configuration...\n" && \
 command=/bin/bash -c \"\$(which php5-fpm) -y /etc/php5/fpm/php-fpm.conf -c /etc/php5/fpm/php.ini --nodaemonize\"\n\
 autostart=false\n\
 autorestart=true\n\
+stdout_logfile=/dev/stdout\n\
+stdout_logfile_maxbytes=0\n\
+stderr_logfile=/dev/stderr\n\
+stderr_logfile_maxbytes=0\n\
+stdout_events_enabled=true\n\
+stderr_events_enabled=true\n\
 \n" > ${file} && \
     printf "Done patching ${file}...\n" && \
     \
@@ -367,6 +461,7 @@ RUN printf "Updading PHP and PHP-FPM configuration...\n" && \
     perl -0p -i -e "s>; http://php.net/display-errors\ndisplay_errors = .*>; http://php.net/display-errors\ndisplay_errors = ${app_php_global_log_display}>" ${file} && \
     perl -0p -i -e "s>; http://php.net/log-errors\nlog_errors = .*>; http://php.net/log-errors\nlog_errors = ${app_php_global_log_file}>" ${file} && \
     perl -0p -i -e "s>; http://php.net/log-errors-max-len\nlog_errors_max_len = .*>; http://php.net/log-errors-max-len\nlog_errors_max_len = 10M>" ${file} && \
+    perl -0p -i -e "s>; http://php.net/error-log\n>; http://php.net/error-log\nerror_log = /dev/stderr\n>" ${file} && \
     # change timeouts \
     perl -0p -i -e "s>; http://php.net/max-input-time\nmax_input_time = .*>; http://php.net/max-input-time\nmax_input_time = -1>" ${file} && \
     perl -0p -i -e "s>; Note: This directive is hardcoded to 0 for the CLI SAPI\nmax_execution_time = .*>; Note: This directive is hardcoded to 0 for the CLI SAPI\nmax_execution_time = -1>" ${file} && \
@@ -390,6 +485,7 @@ RUN printf "Updading PHP and PHP-FPM configuration...\n" && \
     perl -0p -i -e "s>; http://php.net/display-errors\ndisplay_errors = .*>; http://php.net/display-errors\ndisplay_errors = ${app_php_global_log_display}>" ${file} && \
     perl -0p -i -e "s>; http://php.net/log-errors\nlog_errors = .*>; http://php.net/log-errors\nlog_errors = ${app_php_global_log_file}>" ${file} && \
     perl -0p -i -e "s>; http://php.net/log-errors-max-len\nlog_errors_max_len = .*>; http://php.net/log-errors-max-len\nlog_errors_max_len = 10M>" ${file} && \
+    perl -0p -i -e "s>; http://php.net/error-log\n>; http://php.net/error-log\nerror_log = /dev/stderr\n>" ${file} && \
     # change timeouts \
     perl -0p -i -e "s>; http://php.net/max-input-time\nmax_input_time = .*>; http://php.net/max-input-time\nmax_input_time = $((${app_php_global_limit_timeout}/2))>" ${file} && \
     perl -0p -i -e "s>; Note: This directive is hardcoded to 0 for the CLI SAPI\nmax_execution_time = .*>; Note: This directive is hardcoded to 0 for the CLI SAPI\nmax_execution_time = ${app_php_global_limit_timeout}>" ${file} && \
@@ -414,11 +510,11 @@ RUN printf "Updading PHP and PHP-FPM configuration...\n" && \
     printf "\n# Applying configuration for ${file}...\n" && \
     # disable daemon/run in foreground \
     perl -0p -i -e "s>; Default Value: yes\n;daemonize = .*>; Default Value: yes\ndaemonize = no>" ${file} && \
-    # change log facility \
+    # change logging \
     perl -0p -i -e "s>; Default Value: daemon\n;syslog.facility = .*>; Default Value: daemon\nsyslog.facility = daemon>" ${file} && \
     perl -0p -i -e "s>; Default Value: php-fpm\n;syslog.ident = .*>; Default Value: php-fpm\nsyslog.ident = php-fpm>" ${file} && \
-    # change log level \
     perl -0p -i -e "s>; Default Value: notice\n;log_level = .*>; Default Value: notice\nlog_level = ${app_fpm_global_log_level}>" ${file} && \
+    perl -0p -i -e "s>; Default Value: log/php-fpm.log\n.*error_log = .*>; Default Value: log/php-fpm.log\nerror_log = /dev/stderr>" ${file} && \
     # change maximum file open limit \
     perl -0p -i -e "s>; Default Value: system defined value\n;rlimit_files = .*>; Default Value: system defined value\nrlimit_files = ${app_fpm_global_limit_descriptors}>" ${file} && \
     # change maximum processes \
@@ -449,15 +545,16 @@ RUN printf "Updading PHP and PHP-FPM configuration...\n" && \
     # listen as user/group \
     perl -0p -i -e "s>listen.owner = .*\nlisten.group = .*\n;listen.mode = .*>listen.owner = ${app_fpm_pool_user}\nlisten.group = ${app_fpm_pool_group}\nlisten.mode = 0660>" ${file} && \
     # change logging \
-    printf "\n; Error log path\nphp_value[error_log] = ${app_fpm_pool_home}/log/${app_fpm_pool_id}.error.log\n" >> ${file} && \
-    perl -0p -i -e "s>; Default: not set\n;access.log = .*>; Default: not set\naccess.log = log/\\\$pool.access.log>" ${file} && \
-    perl -0p -i -e "s>; Note: slowlog is mandatory if request_slowlog_timeout is set\n;slowlog = .*>; Note: slowlog is mandatory if request_slowlog_timeout is set\nslowlog = log/\\\$pool.slow.log>" ${file} && \
+    printf "\n; Error log path\nphp_value[error_log] = /proc/self/fd/2\n" >> ${file} && \
+    perl -0p -i -e "s>; Default: not set\n;access.log = .*>; Default: not set\naccess.log = /proc/self/fd/2>" ${file} && \
+    perl -0p -i -e "s>; Note: slowlog is mandatory if request_slowlog_timeout is set\n;slowlog = .*>; Note: slowlog is mandatory if request_slowlog_timeout is set\nslowlog = /proc/self/fd/2>" ${file} && \
+    perl -0p -i -e "s>; Default Value: no\n;catch_workers_output = .*>; Default Value: no\ncatch_workers_output = yes>" ${file} && \
     # change status \
     perl -0p -i -e "s>; Default Value: not set \n;pm.status_path = .*>; Default Value: not set\npm.status_path = /fpm-status>" ${file} && \
     perl -0p -i -e "s>; Default Value: not set\n;ping.path = .*>; Default Value: not set\nping.path = /fpm-ping>" ${file} && \
     perl -0p -i -e "s>; Default Value: pong\n;ping.response = .*>; Default Value: pong\nping.response = pong>" ${file} && \
     # change whitelist \
-    perl -0p -i -e "s>; Default Value: any\n;listen.allowed_clients = .*>; Default Value: any\n;listen.allowed_clients = ${app_fpm_pool_listen_wlist}>" ${file} && \
+    if [ ! -z "$app_fpm_pool_listen_wlist" ]; then perl -0p -i -e "s>; Default Value: any\n;listen.allowed_clients = .*>; Default Value: any\nlisten.allowed_clients = ${app_fpm_pool_listen_wlist}>" ${file}; else perl -0p -i -e "s>; Default Value: any\n;listen.allowed_clients = .*>; Default Value: any\n;listen.allowed_clients = 127.0.0.1>" ${file}; fi && \
     # change interface and port \
     perl -0p -i -e "s>; Note: This value is mandatory.\nlisten = .*>; Note: This value is mandatory.\nlisten = ${app_fpm_pool_listen_addr}:${app_fpm_pool_listen_port}>" ${file} && \
     # change maximum file open limit \

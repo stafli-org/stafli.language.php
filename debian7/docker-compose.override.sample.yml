@@ -34,7 +34,7 @@ services:
         app_php_global_limit_memory: "134217728"
         app_fpm_global_limit_processes: "128"
         app_fpm_pool_listen_port: "9000"
-        app_fpm_pool_limit_backlog: "256"
+        app_fpm_pool_limit_backlog: "65536"
         app_fpm_pool_pm_method: "dynamic"
         app_fpm_pool_pm_max_children: "100"
         app_fpm_pool_pm_start_servers: "20"
