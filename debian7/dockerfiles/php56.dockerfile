@@ -596,6 +596,16 @@ RUN printf "Updading PHP and PHP-FPM configuration...\n" && \
     perl -0p -i -e "s>; Proxy variables\n>; Proxy variables\nenv\[http_proxy\] = \\\$http_proxy\n>" ${file} && \
     printf "Done patching ${file}...\n" && \
     \
+    # ${app_fpm_pool_home}/test-fpm.sh \
+    file="${app_fpm_pool_home}/test-fpm.sh" && \
+    printf "\n# Writing test for php-fpm...\n" && \
+    printf "\n\
+# https://easyengine.io/tutorials/php/directly-connect-php-fpm/\n\
+SCRIPT_NAME=/fpm-status SCRIPT_FILENAME=/fpm-status REQUEST_METHOD=GET cgi-fcgi -bind -connect 127.0.0.1:${app_fpm_pool_listen_port}\n\
+"> ${file} && \
+    chmod +x ${file} && \
+    printf "Done writing ${file}...\n" && \
+    \
     printf "\n# Testing configuration...\n" && \
     echo "Testing $(which ab):"; $(which ab) -V && \
     echo "Testing $(which mysql):"; $(which mysql) -V && \
