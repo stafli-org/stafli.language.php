@@ -102,58 +102,57 @@ ARG app_fpm_pool_pm_max_requests="5000"
 #
 
 # Add foreign repositories and GPG keys
-#  - N/A: for MariaDB
-#  - N/A: for Dotdeb
-# Install crypto packages
-#  - openssl: for openssl, the OpenSSL cryptographic utility required for many packages
-#  - ca-certificates: adds trusted PEM files of CA certificates to the system
-# Install php packages
-#  - php5: the server-side, HTML-embedded scripting language (metapackage)
-#  - php5-common: the PHP common libraries and files
-#  - php-pear: the PEAR package manager
-#  - php5-cli: for php5, the PHP CLI (command line interface)
-#  - php5-fpm: the PHP FPM (fast process manager)
-#  - php5-gmp: the PHP GMP (GNU Multiple Precision) arithmetic extension
-#  - php5-mcrypt: the PHP Mcrypt extension
-#  - php5-json: the PHP JSON (JavaScript Object Notation) extension
-#  - php5-xmlrpc: the PHP XML-RPC (Extensible Markup Language - Remote Procedure Call) extension
-#  - php5-gd: the PHP GD (Graphics Draw) extension
-#  - php5-imap: the PHP IMAP (IMAP, POP3 and NNTP) extension
-#  - php5-geoip: the PHP GeoIP extension
-#  - php5-curl: the PHP cURL extension
-#  - php5-ssh2: the PHP SSH2 (Secure Shell version 2) extension
-#  - php5-ldap: the PHP LDAP (Lightweight Directory Access Protocol) extension
-#  - php5-mysqlnd: the PHP MySQLND (MySQL Native Driver) extension
-#  - php5-pgsql: the PHP PgSQL (PostgreSQL) extension
-#  - php5-sqlite: the PHP SQLite extension
-#  - php5-odbc: the PHP ODBC (Open Database Connectivity) extension
-# Install utilities and clients packages
-#  - apache2-utils: for ab and others, the HTTPd utilities
-#  - libfcgi0ldbl: the Shared library of FastCGI, which includes the command cgi-fcgi
-#  - mariadb-client: for mysql, the MariaDB client
-#  - postgresql-client: for psql, the front-end programs for PostgreSQL
-#  - sqlite3: for sqlite, the Command line interface for SQLite 3
-#  - redis-tools: for redis-cli, the Redis client
+#  - packages.dotdeb.org: for DotDeb
+#  - apt.mariadb.org: for MariaDB
+# Refresh the package manager
+# Install the selected packages
+#   Install the php packages
+#    - php5: the server-side, HTML-embedded scripting language (metapackage)
+#    - php5-common: the PHP common libraries and files
+#    - php-pear: the PEAR package manager
+#    - php5-cli: for php5, the PHP CLI (command line interface)
+#    - php5-fpm: the PHP FPM (fast process manager)
+#    - php5-gmp: the PHP GMP (GNU Multiple Precision) arithmetic extension
+#    - php5-mcrypt: the PHP Mcrypt extension
+#    - php5-json: the PHP JSON (JavaScript Object Notation) extension
+#    - php5-xmlrpc: the PHP XML-RPC (Extensible Markup Language - Remote Procedure Call) extension
+#    - php5-gd: the PHP GD (Graphics Draw) extension
+#    - php5-imap: the PHP IMAP (IMAP, POP3 and NNTP) extension
+#    - php5-geoip: the PHP GeoIP extension
+#    - php5-curl: the PHP cURL extension
+#    - php5-ssh2: the PHP SSH2 (Secure Shell version 2) extension
+#    - php5-ldap: the PHP LDAP (Lightweight Directory Access Protocol) extension
+#    - php5-mysqlnd: the PHP MySQLND (MySQL Native Driver) extension
+#    - php5-pgsql: the PHP PgSQL (PostgreSQL) extension
+#    - php5-sqlite: the PHP SQLite extension
+#    - php5-odbc: the PHP ODBC (Open Database Connectivity) extension
+#   Install the utilities and clients packages
+#    - apache2-utils: for ab and others, the HTTPd utilities
+#    - libfcgi0ldbl: the Shared library of FastCGI, which includes the command cgi-fcgi
+#    - mariadb-client: for mysql, the MariaDB client
+#    - postgresql-client: for psql, the front-end programs for PostgreSQL
+#    - sqlite3: for sqlite, the Command line interface for SQLite 3
+#    - redis-tools: for redis-cli, the Redis client
+# Cleanup the package manager
 RUN printf "Installing repositories and packages...\n" && \
     \
     printf "Install the repositories and refresh the GPG keys...\n" && \
-    printf "# MariaDB repository\n\
-deb http://lon1.mirrors.digitalocean.com/mariadb/repo/10.1/debian wheezy main\n\
-\n" > /etc/apt/sources.list.d/mariadb.list && \
-    apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xcbcb082a1bb943db && \
     printf "# Dotdeb repository\n\
 deb http://packages.dotdeb.org wheezy all\n\
 deb http://packages.dotdeb.org wheezy-php56 all\n\
 \n" > /etc/apt/sources.list.d/dotdeb.list && \
     apt-key adv --fetch-keys http://www.dotdeb.org/dotdeb.gpg && \
-    gpg --refresh-keys && \
     \
-    printf "Install the crypto packages...\n" && \
-    apt-get update && apt-get install -qy \
-      openssl ca-certificates && \
+    printf "# MariaDB repository\n\
+deb http://lon1.mirrors.digitalocean.com/mariadb/repo/10.1/debian wheezy main\n\
+\n" > /etc/apt/sources.list.d/mariadb.list && \
+    apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xcbcb082a1bb943db && \
+    \
+    printf "Refresh the package manager...\n" && \
+    apt-get update && \
     \
     printf "Install the php packages...\n" && \
-    apt-get update && apt-get install -qy \
+    apt-get install -qy \
       php5 php5-common php-pear \
       php5-cli php5-fpm \
       php5-gmp php5-mcrypt \
@@ -164,13 +163,13 @@ deb http://packages.dotdeb.org wheezy-php56 all\n\
       php5-mysqlnd php5-pgsql php5-sqlite php5-odbc && \
     \
     printf "Install the utilities and clients packages...\n" && \
-    apt-get update && apt-get install -qy \
+    apt-get install -qy \
       apache2-utils libfcgi0ldbl \
       mariadb-client postgresql-client sqlite3 \
       redis-tools && \
     \
     printf "Cleanup the package manager...\n" && \
-    apt-get clean && rm -rf /var/lib/apt/lists/* && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* && rm -Rf /var/cache/apt/* && \
     \
     printf "Finished installing repositories and packages...\n";
 
@@ -178,42 +177,44 @@ deb http://packages.dotdeb.org wheezy-php56 all\n\
 # PHP extensions
 #
 
-# Install binary library packages
-#  - libssl1.0.0, the Secure Sockets Layer toolkit - shared libraries (required for running)
-#  - libcurl3, the easy-to-use client-side URL transfer library (OpenSSL flavour) (required for running)
-#  - libsasl2-2, the Cyrus SASL - authentication abstraction library (required for running)
-#  - libxml2, the GNOME XML library (required for running)
-#  - zlib1g, the compression library - runtime (required for running)
-#  - libyaml-0-2, the Fast YAML 1.1 parser and emitter library (required for running)
-#  - libmemcached11, the C and C++ client library to the memcached server (required for running)
-# Install php packages
-#  - php5-dev: the PHP development libraries and files (required for compiling)
-# Install parser packages
-#  - gawk: for gawk, GNU awk, a pattern scanning and processing language
-#  - m4: for m4, the GNU m4 which is an interpreter for a macro processing language (required for compiling)
-#  - re2c: for r2ec, a tool for generating fast C-based recognizers
-# Install build tools packages
-#  - make: for make, the GNU make which is an utility for Directing compilation
-#  - automake: for automake, a tool for generating GNU Standards-compliant Makefiles (required for compiling)
-#  - autoconf: for autoconf, a automatic configure script builder for FSF source packages (required for compiling)
-#  - pkg-config: for pkg-config, a tool to manage compile and link flags for libraries (required for compiling)
-#  - libtool: for GNU libtool, a generic library support script (required for compiling)
-# Install compiler packages
-#  - cpp: for cpp, the GNU C preprocessor (cpp) for the C Programming language (required for compiling)
-#  - gcc: for gcc, the GNU C compiler (required for compiling)
-#  - g++: for g++, the GNU C++ compiler (required for compiling)
-# Install library packages
-#  - linux-libc-dev: the Linux Kernel - Headers for development (required for compiling)
-#  - libc6-dev: the Embedded GNU C Library - Development Libraries and Header Files (required for compiling)
-#  - libpcre3-dev: the Perl 5 Compatible Regular Expression Library - development files (required for compiling)
-#  - libssl-dev: the OpenSSL toolkit - development files (required for compiling)
-#  - libcurl4-openssl-dev: the CURL library - development files (OpenSSL version)
-#  - libsasl2-dev: the Cyrus SASL library - development files
-#  - libxml2-dev: the GNOME XML library - development files
-#  - zlib1g-dev:  the ZLib library - development files (required for compiling)
-#  - libyaml-dev: the YAML library - development files
-#  - libmemcached-dev: the Memcached library - development files
-# Build and install php extensions
+# Refresh the package manager
+# Install the selected packages
+#   Install the binary library packages
+#    - libssl1.0.0, the Secure Sockets Layer toolkit - shared libraries (required for running)
+#    - libcurl3, the easy-to-use client-side URL transfer library (OpenSSL flavour) (required for running)
+#    - libsasl2-2, the Cyrus SASL - authentication abstraction library (required for running)
+#    - libxml2, the GNOME XML library (required for running)
+#    - zlib1g, the compression library - runtime (required for running)
+#    - libyaml-0-2, the Fast YAML 1.1 parser and emitter library (required for running)
+#    - libmemcached11, the C and C++ client library to the memcached server (required for running)
+#   Install the php packages
+#    - php5-dev: the PHP development libraries and files (required for compiling)
+#   Install the parser packages
+#    - gawk: for gawk, GNU awk, a pattern scanning and processing language
+#    - m4: for m4, the GNU m4 which is an interpreter for a macro processing language (required for compiling)
+#    - re2c: for r2ec, a tool for generating fast C-based recognizers
+#   Install the build tools packages
+#    - make: for make, the GNU make which is an utility for Directing compilation
+#    - automake: for automake, a tool for generating GNU Standards-compliant Makefiles (required for compiling)
+#    - autoconf: for autoconf, a automatic configure script builder for FSF source packages (required for compiling)
+#    - pkg-config: for pkg-config, a tool to manage compile and link flags for libraries (required for compiling)
+#    - libtool: for GNU libtool, a generic library support script (required for compiling)
+#   Install the compiler packages
+#    - cpp: for cpp, the GNU C preprocessor (cpp) for the C Programming language (required for compiling)
+#    - gcc: for gcc, the GNU C compiler (required for compiling)
+#    - g++: for g++, the GNU C++ compiler (required for compiling)
+#   Install the library packages
+#    - linux-libc-dev: the Linux Kernel - Headers for development (required for compiling)
+#    - libc6-dev: the Embedded GNU C Library - Development Libraries and Header Files (required for compiling)
+#    - libpcre3-dev: the Perl 5 Compatible Regular Expression Library - development files (required for compiling)
+#    - libssl-dev: the OpenSSL toolkit - development files (required for compiling)
+#    - libcurl4-openssl-dev: the CURL library - development files (OpenSSL version)
+#    - libsasl2-dev: the Cyrus SASL library - development files
+#    - libxml2-dev: the GNOME XML library - development files
+#    - zlib1g-dev:  the ZLib library - development files (required for compiling)
+#    - libyaml-dev: the YAML library - development files
+#    - libmemcached-dev: the Memcached library - development files
+# Build and install the php extensions
 #  - Binary API (igbinary)
 #  - MessagePack (msgpack)
 #  - YAML
@@ -225,11 +226,15 @@ deb http://packages.dotdeb.org wheezy-php56 all\n\
 #  - Xdebug
 #  - XHProf
 # Remove the various development packages
-# Enable/disable php extensions
+# Cleanup the package manager
+# Enable/disable the php extensions
 RUN printf "Start installing extensions...\n" && \
     \
+    printf "Refresh the package manager...\n" && \
+    apt-get update && \
+    \
     printf "Install the runtime packages...\n" && \
-    apt-get update && apt-get install -qy \
+    apt-get install -qy \
       libssl1.0.0 libcurl3 \
       libsasl2-2 \
       libxml2 zlib1g \
@@ -247,7 +252,7 @@ RUN printf "Start installing extensions...\n" && \
       libxml2-dev zlib1g-dev \
       libyaml-dev libmemcached-dev \
 " && \
-    apt-get update && apt-get install -qy \
+    apt-get install -qy \
       ${packages_devel} && \
     \
     printf "Building the Binary API (deb: N/A) extension...\n" && \
@@ -330,7 +335,7 @@ RUN printf "Start installing extensions...\n" && \
     apt-get autoremove --purge -qy && \
     \
     printf "Cleanup the package manager...\n" && \
-    apt-get clean && rm -rf /var/lib/apt/lists/* && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* && rm -Rf /var/cache/apt/* && \
     \
     printf "Enabling/disabling extensions...\n" && \
     # Core extensions \

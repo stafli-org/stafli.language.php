@@ -103,43 +103,47 @@ ARG app_fpm_pool_pm_max_requests="5000"
 
 # Add foreign repositories and GPG keys
 #  - remi-release: for Les RPM de remi pour Enterprise Linux 7 (Remi)
-#  - N/A: for MariaDB
-# Install crypto packages
-#  - openssl: for openssl, the OpenSSL cryptographic utility required for many packages
-#  - ca-certificates: adds trusted PEM files of CA certificates to the system
-# Install php packages
-#  - php-common: the PHP common libraries and files
-#  - php-pear: the PEAR package manager
-#  - php-cli: for php5, the PHP CLI (command line interface)
-#  - php-fpm: the PHP FPM (fast process manager)
-#  - php-gmp: the PHP GMP (GNU Multiple Precision) arithmetic extension
-#  - php-mbstring: the PHP Mbstring (Multibyte String) extension
-#  - php-mcrypt: the PHP Mcrypt extension
-#  - php-json: the PHP JSON (JavaScript Object Notation) extension
-#  - php-xml: the PHP XML (Extensible Markup Language) extension
-#  - php-soap: the PHP SOAP (Simple Object Access Protocol) extension
-#  - php-xmlrpc: the PHP XML-RPC (Extensible Markup Language - Remote Procedure Call) extension
-#  - php-gd: the PHP GD (Graphics Draw) extension
-#  - php-imap: the PHP IMAP (IMAP, POP3 and NNTP) extension
-#  - php-geoip: the PHP GeoIP extension
-#  - php-curl: the PHP cURL extension
-#  - php-ssh2: the PHP SSH2 (Secure Shell version 2) extension
-#  - php-ldap: the PHP LDAP (Lightweight Directory Access Protocol) extension
-#  - php-pdo: the PHP PDO (PHP Data Objects) extension
-#  - php-mysqlnd: the PHP MySQLND (MySQL Native Driver) extension
-#  - php-pgsql: the PHP PgSQL (PostgreSQL) extension
-#  - php-sqlite: the PHP SQLite extension
-#  - php-odbc: the PHP ODBC (Open Database Connectivity) extension
-#  - php-opcache: the PHP OPcache extension
-# Install utilities and clients packages
-#  - fcgi: the Shared library of FastCGI, which includes the command cgi-fcgi
-#  - httpd-tools: for ab and others, the HTTPd utilities
-#  - MariaDB-client: for mysql, the MariaDB client
-#  - postgresql: for psql, the front-end programs for PostgreSQL
-#  - sqlite: for sqlite, the Command line interface for SQLite 3
+#  - yum.mariadb.org: for MariaDB
+# Refresh the package manager
+# Install the selected packages
+#   Install the php packages
+#    - php-common: the PHP common libraries and files
+#    - php-pear: the PEAR package manager
+#    - php-cli: for php5, the PHP CLI (command line interface)
+#    - php-fpm: the PHP FPM (fast process manager)
+#    - php-gmp: the PHP GMP (GNU Multiple Precision) arithmetic extension
+#    - php-mbstring: the PHP Mbstring (Multibyte String) extension
+#    - php-mcrypt: the PHP Mcrypt extension
+#    - php-json: the PHP JSON (JavaScript Object Notation) extension
+#    - php-xml: the PHP XML (Extensible Markup Language) extension
+#    - php-soap: the PHP SOAP (Simple Object Access Protocol) extension
+#    - php-xmlrpc: the PHP XML-RPC (Extensible Markup Language - Remote Procedure Call) extension
+#    - php-gd: the PHP GD (Graphics Draw) extension
+#    - php-imap: the PHP IMAP (IMAP, POP3 and NNTP) extension
+#    - php-geoip: the PHP GeoIP extension
+#    - php-curl: the PHP cURL extension
+#    - php-ssh2: the PHP SSH2 (Secure Shell version 2) extension
+#    - php-ldap: the PHP LDAP (Lightweight Directory Access Protocol) extension
+#    - php-pdo: the PHP PDO (PHP Data Objects) extension
+#    - php-mysqlnd: the PHP MySQLND (MySQL Native Driver) extension
+#    - php-pgsql: the PHP PgSQL (PostgreSQL) extension
+#    - php-sqlite: the PHP SQLite extension
+#    - php-odbc: the PHP ODBC (Open Database Connectivity) extension
+#    - php-opcache: the PHP OPcache extension
+#   Install the utilities and clients packages
+#    - fcgi: the Shared library of FastCGI, which includes the command cgi-fcgi
+#    - httpd-tools: for ab and others, the HTTPd utilities
+#    - MariaDB-client: for mysql, the MariaDB client
+#    - postgresql: for psql, the front-end programs for PostgreSQL
+#    - sqlite: for sqlite, the Command line interface for SQLite 3
+# Cleanup the package manager
 RUN printf "Installing repositories and packages...\n" && \
     \
     printf "Install the repositories and refresh the GPG keys...\n" && \
+    yum install -y \
+      http://rpms.remirepo.net/enterprise/remi-release-7.rpm && \
+    yum-config-manager --enable remi-safe remi remi-php56 && \
+    \
     printf "# MariaDB repository\n\
 [mariadb]\n\
 name = MariaDB\n\
@@ -148,18 +152,12 @@ gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB\n\
 gpgcheck=1\n\
 \n" > /etc/yum.repos.d/mariadb.repo && \
     rpm --import https://yum.mariadb.org/RPM-GPG-KEY-MariaDB && \
-    rpm --rebuilddb && \
-    yum makecache && yum install -y \
-      http://rpms.remirepo.net/enterprise/remi-release-7.rpm && \
-    yum-config-manager --enable remi-safe remi remi-php56 && \
-    gpg --refresh-keys && \
     \
-    printf "Install the crypto packages...\n" && \
-    yum makecache && yum install -y \
-      openssl ca-certificates && \
+    printf "Refresh the package manager...\n" && \
+    rpm --rebuilddb && yum makecache && \
     \
     printf "Install the php packages...\n" && \
-    yum makecache && yum install -y \
+    yum install -y \
       php-common php-pear \
       php-cli php-fpm \
       php-gmp php-mbstring php-mcrypt \
@@ -171,12 +169,12 @@ gpgcheck=1\n\
       php-opcache && \
     \
     printf "Install the utilities and clients packages...\n" && \
-    yum makecache && yum install -y \
+    yum install -y \
       httpd-tools fcgi \
       MariaDB-client postgresql sqlite && \
     \
     printf "Cleanup the package manager...\n" && \
-    yum clean all && rm -Rf /var/lib/yum/* && \
+    yum clean all && rm -Rf /var/lib/yum/* && rm -Rf /var/cache/yum/* && \
     \
     printf "Finished installing repositories and packages...\n";
 
@@ -184,42 +182,44 @@ gpgcheck=1\n\
 # PHP extensions
 #
 
-# Install binary library packages
-#  - openssl-libs, the Secure Sockets Layer toolkit - shared libraries (required for running)
-#  - libcurl, the easy-to-use client-side URL transfer library (OpenSSL flavour) (required for running)
-#  - cyrus-sasl-lib, the Cyrus SASL - authentication abstraction library (required for running)
-#  - libxml2, the GNOME XML library (required for running)
-#  - zlib, the compression library - runtime (required for running)
-#  - libyaml, the Fast YAML 1.1 parser and emitter library (required for running)
-#  - libmemcached, the C and C++ client library to the memcached server (required for running)
-# Install php packages
-#  - php-devel: the PHP development libraries and files (required for compiling)
-# Install parser packages
-#  - gawk: for gawk, GNU awk, a pattern scanning and processing language
-#  - m4: for m4, the GNU m4 which is an interpreter for a macro processing language (required for compiling)
-#  - re2c: for r2ec, a tool for generating fast C-based recognizers
-# Install build tools packages
-#  - make: for make, the GNU make which is an utility for Directing compilation
-#  - automake: for automake, a tool for generating GNU Standards-compliant Makefiles (required for compiling)
-#  - autoconf: for autoconf, a automatic configure script builder for FSF source packages (required for compiling)
-#  - pkgconfig: for pkg-config, a tool to manage compile and link flags for libraries (required for compiling)
-#  - libtool: for GNU libtool, a generic library support script (required for compiling)
-# Install compiler packages
-#  - cpp: for cpp, the GNU C preprocessor (cpp) for the C Programming language (required for compiling)
-#  - gcc: for gcc, the GNU C compiler (required for compiling)
-#  - gcc-c++: for g++, the GNU C++ compiler
-# Install library packages
-#  - kernel-headers: the Linux Kernel - Headers for development (required for compiling)
-#  - glibc-headers: the Embedded GNU C Library - Development Libraries and Header Files (required for compiling)
-#  - pcre-devel: the Perl 5 Compatible Regular Expression Library - development files (required for compiling)
-#  - openssl-devel: the OpenSSL toolkit - development files (required for compiling)
-#  - libcurl-devel: the CURL library - development files (OpenSSL version)
-#  - cyrus-sasl-devel: the Cyrus SASL library - development files
-#  - libxml2-devel: the GNOME XML library - development files
-#  - zlib-devel:  the ZLib library - development files (required for compiling)
-#  - libyaml-devel: the YAML library - development files
-#  - libmemcached-devel: the Memcached library - development files
-# Build and Install PHP extensions
+# Refresh the package manager
+# Install the selected packages
+#   Install the binary library packages
+#    - openssl-libs, the Secure Sockets Layer toolkit - shared libraries (required for running)
+#    - libcurl, the easy-to-use client-side URL transfer library (OpenSSL flavour) (required for running)
+#    - cyrus-sasl-lib, the Cyrus SASL - authentication abstraction library (required for running)
+#    - libxml2, the GNOME XML library (required for running)
+#    - zlib, the compression library - runtime (required for running)
+#    - libyaml, the Fast YAML 1.1 parser and emitter library (required for running)
+#    - libmemcached, the C and C++ client library to the memcached server (required for running)
+#   Install the php packages
+#    - php-devel: the PHP development libraries and files (required for compiling)
+#   Install the parser packages
+#    - gawk: for gawk, GNU awk, a pattern scanning and processing language
+#    - m4: for m4, the GNU m4 which is an interpreter for a macro processing language (required for compiling)
+#    - re2c: for r2ec, a tool for generating fast C-based recognizers
+#   Install the build tools packages
+#    - make: for make, the GNU make which is an utility for Directing compilation
+#    - automake: for automake, a tool for generating GNU Standards-compliant Makefiles (required for compiling)
+#    - autoconf: for autoconf, a automatic configure script builder for FSF source packages (required for compiling)
+#    - pkgconfig: for pkg-config, a tool to manage compile and link flags for libraries (required for compiling)
+#    - libtool: for GNU libtool, a generic library support script (required for compiling)
+#   Install the compiler packages
+#    - cpp: for cpp, the GNU C preprocessor (cpp) for the C Programming language (required for compiling)
+#    - gcc: for gcc, the GNU C compiler (required for compiling)
+#    - gcc-c++: for g++, the GNU C++ compiler
+#   Install the library packages
+#    - kernel-headers: the Linux Kernel - Headers for development (required for compiling)
+#    - glibc-headers: the Embedded GNU C Library - Development Libraries and Header Files (required for compiling)
+#    - pcre-devel: the Perl 5 Compatible Regular Expression Library - development files (required for compiling)
+#    - openssl-devel: the OpenSSL toolkit - development files (required for compiling)
+#    - libcurl-devel: the CURL library - development files (OpenSSL version)
+#    - cyrus-sasl-devel: the Cyrus SASL library - development files
+#    - libxml2-devel: the GNOME XML library - development files
+#    - zlib-devel:  the ZLib library - development files (required for compiling)
+#    - libyaml-devel: the YAML library - development files
+#    - libmemcached-devel: the Memcached library - development files
+# Build and install the php extensions
 #  - Binary API (igbinary)
 #  - MessagePack (msgpack)
 #  - YAML
@@ -231,11 +231,15 @@ gpgcheck=1\n\
 #  - Xdebug
 #  - XHProf
 # Remove the various development packages
-# Enable/disable php extensions
+# Cleanup the package manager
+# Enable/disable the php extensions
 RUN printf "Start installing extensions...\n" && \
     \
+    printf "Refresh the package manager...\n" && \
+    rpm --rebuilddb && yum makecache && \
+    \
     printf "Install the runtime packages...\n" && \
-    yum makecache && yum install -y \
+    yum install -y \
       openssl-libs libcurl \
       cyrus-sasl-lib \
       libxml2 zlib \
@@ -264,7 +268,7 @@ RUN printf "Start installing extensions...\n" && \
       libxml2-devel zlib-devel \
       libyaml-devel libmemcached-devel \
 " && \
-    yum makecache && yum install -y \
+    yum install -y \
       ${packages_devel_install} && \
     \
     printf "Building the Binary API (rpm: php-pecl-igbinary) extension...\n" && \
@@ -346,7 +350,7 @@ RUN printf "Start installing extensions...\n" && \
     yum remove ${packages_devel_uninstall} -y && \
     \
     printf "Cleanup the package manager...\n" && \
-    yum clean all && rm -Rf /var/lib/yum/* && \
+    yum clean all && rm -Rf /var/lib/yum/* && rm -Rf /var/cache/yum/* && \
     \
     printf "Enabling/disabling extensions...\n" && \
     # Core extensions \
