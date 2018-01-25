@@ -489,7 +489,7 @@ RUN printf "Updading PHP and PHP-FPM configuration...\n" && \
     perl -0p -i -e "s>; http://php.net/display-errors\ndisplay_errors = .*>; http://php.net/display-errors\ndisplay_errors = ${app_php_global_log_display}>" ${file} && \
     perl -0p -i -e "s>; http://php.net/log-errors\nlog_errors = .*>; http://php.net/log-errors\nlog_errors = ${app_php_global_log_file}>" ${file} && \
     perl -0p -i -e "s>; http://php.net/log-errors-max-len\nlog_errors_max_len = .*>; http://php.net/log-errors-max-len\nlog_errors_max_len = 10M>" ${file} && \
-    perl -0p -i -e "s>; http://php.net/error-log\n>; http://php.net/error-log\nerror_log = /dev/stderr\n>" ${file} && \
+    perl -0p -i -e "s>; http://php.net/error-log\n>; http://php.net/error-log\nerror_log = /proc/self/fd/2\n>" ${file} && \
     # change timeouts \
     perl -0p -i -e "s>; http://php.net/max-input-time\nmax_input_time = .*>; http://php.net/max-input-time\nmax_input_time = -1>" ${file} && \
     perl -0p -i -e "s>; Note: This directive is hardcoded to 0 for the CLI SAPI\nmax_execution_time = .*>; Note: This directive is hardcoded to 0 for the CLI SAPI\nmax_execution_time = -1>" ${file} && \
@@ -514,7 +514,7 @@ RUN printf "Updading PHP and PHP-FPM configuration...\n" && \
     perl -0p -i -e "s>; http://php.net/display-errors\ndisplay_errors = .*>; http://php.net/display-errors\ndisplay_errors = ${app_php_global_log_display}>" ${file} && \
     perl -0p -i -e "s>; http://php.net/log-errors\nlog_errors = .*>; http://php.net/log-errors\nlog_errors = ${app_php_global_log_file}>" ${file} && \
     perl -0p -i -e "s>; http://php.net/log-errors-max-len\nlog_errors_max_len = .*>; http://php.net/log-errors-max-len\nlog_errors_max_len = 10M>" ${file} && \
-    perl -0p -i -e "s>; http://php.net/error-log\n>; http://php.net/error-log\nerror_log = /dev/stderr\n>" ${file} && \
+    perl -0p -i -e "s>; http://php.net/error-log\n>; http://php.net/error-log\nerror_log = /proc/self/fd/2\n>" ${file} && \
     # change timeouts \
     perl -0p -i -e "s>; http://php.net/max-input-time\nmax_input_time = .*>; http://php.net/max-input-time\nmax_input_time = $((${app_php_global_limit_timeout}/2))>" ${file} && \
     perl -0p -i -e "s>; Note: This directive is hardcoded to 0 for the CLI SAPI\nmax_execution_time = .*>; Note: This directive is hardcoded to 0 for the CLI SAPI\nmax_execution_time = ${app_php_global_limit_timeout}>" ${file} && \
@@ -543,7 +543,7 @@ RUN printf "Updading PHP and PHP-FPM configuration...\n" && \
     perl -0p -i -e "s>; Default Value: daemon\n;syslog.facility = .*>; Default Value: daemon\nsyslog.facility = daemon>" ${file} && \
     perl -0p -i -e "s>; Default Value: php-fpm\n;syslog.ident = .*>; Default Value: php-fpm\nsyslog.ident = php-fpm>" ${file} && \
     perl -0p -i -e "s>; Default Value: notice\n;log_level = .*>; Default Value: notice\nlog_level = ${app_fpm_global_log_level}>" ${file} && \
-    perl -0p -i -e "s>; Default Value: /var/log/php-fpm.log\n.*error_log = .*>; Default Value: /var/log/php-fpm.log\nerror_log = /dev/stderr>" ${file} && \
+    perl -0p -i -e "s>; Default Value: /var/log/php-fpm.log\n.*error_log = .*>; Default Value: /var/log/php-fpm.log\nerror_log = /proc/self/fd/2>" ${file} && \
     # change maximum file open limit \
     perl -0p -i -e "s>; Default Value: system defined value\n;rlimit_files = .*>; Default Value: system defined value\nrlimit_files = ${app_fpm_global_limit_descriptors}>" ${file} && \
     # change maximum processes \
