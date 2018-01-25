@@ -27,18 +27,20 @@ These are the services described by the dockerfile and docker-compose files:
 
 ## Images
 These are the [resulting images](https://hub.docker.com/r/stafli/stafli.language.php/tags) upon building:
-- PHP 5.6.x:
-  - stafli/stafli.language.php:php56_debian8
-  - stafli/stafli.language.php:php56_debian7
-  - stafli/stafli.language.php:php56_centos7
-  - stafli/stafli.language.php:php56_centos6
+- Stable:
+  - stafli/stafli.language.php:php56_debian8   [![](https://images.microbadger.com/badges/image/stafli/stafli.language.php:php56_debian8.svg)](https://microbadger.com/images/stafli/stafli.language.php:php56_debian8 "Get your own image badge on microbadger.com")
+  - stafli/stafli.language.php:php56_centos7   [![](https://images.microbadger.com/badges/image/stafli/stafli.language.php:php56_centos7.svg)](https://microbadger.com/images/stafli/stafli.language.php:php56_centos7 "Get your own image badge on microbadger.com")
+- Old Stable:
+  - stafli/stafli.language.php:php56_debian7   [![](https://images.microbadger.com/badges/image/stafli/stafli.language.php:php56_debian7.svg)](https://microbadger.com/images/stafli/stafli.language.php:php56_debian7 "Get your own image badge on microbadger.com")
+  - stafli/stafli.language.php:php56_centos6   [![](https://images.microbadger.com/badges/image/stafli/stafli.language.php:php56_centos6.svg)](https://microbadger.com/images/stafli/stafli.language.php:php56_centos6 "Get your own image badge on microbadger.com")
 
 ## Containers
 These containers can be created from the images:
-- PHP 5.6.x:
+- Stable:
   - stafli_language_php56_debian8_xxx
-  - stafli_language_php56_debian7_xxx
   - stafli_language_php56_centos7_xxx
+- Old Stable:
+  - stafli_language_php56_debian7_xxx
   - stafli_language_php56_centos6_xxx
 
 ## Usage
